@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config';
@@ -17,13 +17,8 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('database.url'),
-        entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
-        synchronize: configService.get<boolean>('database.synchronize'),
-        logging: configService.get<boolean>('database.logging'),
-      }),
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => 
+        configService.get<TypeOrmModuleOptions>('typeorm')!,
       inject: [ConfigService],
     }),
     UserModule,
