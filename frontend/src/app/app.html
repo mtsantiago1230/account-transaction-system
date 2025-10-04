@@ -1,13 +1,97 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<div class="min-h-screen bg-gray-50"></div><div class="min-h-screen bg-gray-50"></div><div class="min-h-screen bg-gray-50">
 
-<style>
+  <!-- Navigation -->
+
+  <nav class="bg-white shadow-sm border-b border-gray-200">  <!-- Navigation -->  <!-- Navigation -->
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="flex justify-between h-16">  <nav class="bg-white shadow-sm border-b border-gray-200">  <nav class="bg-white shadow-sm border-b border-gray-200">
+
+        <div class="flex items-center">
+
+          <div class="flex-shrink-0">    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <h1 class="text-xl font-bold text-gray-900">Account Transaction System</h1>
+
+          </div>      <div class="flex justify-between h-16">      <div class="flex justify-between h-16">
+
+          <div class="hidden md:ml-6 md:flex md:space-x-8">
+
+            <a routerLink="/accounts" routerLinkActive="border-primary-500 text-gray-900" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">        <div class="flex items-center">        <div class="flex items-center">
+
+              Accounts
+
+            </a>          <div class="flex-shrink-0">          <div class="flex-shrink-0">
+
+            <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+
+              Transactions            <h1 class="text-xl font-bold text-gray-900">Account Transaction System</h1>            <h1 class="text-xl font-bold text-gray-900">Account Transaction System</h1>
+
+            </a>
+
+          </div>          </div>          </div>
+
+        </div>
+
+        <div class="flex items-center">          <div class="hidden md:ml-6 md:flex md:space-x-8">          <div class="hidden md:ml-6 md:flex md:space-x-8">
+
+          <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+
+            Profile            <a routerLink="/accounts" routerLinkActive="border-primary-500 text-gray-900" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">            <a routerLink="/accounts" routerLinkActive="border-primary-500 text-gray-900" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+
+          </button>
+
+        </div>              Accounts              Accounts
+
+      </div>
+
+    </div>            </a>            </a>
+
+  </nav>
+
+            <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">            <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+
+  <!-- Main Content -->
+
+  <main>              Transactions              Transactions
+
+    <router-outlet></router-outlet>
+
+  </main>            </a>            </a>
+
+</div>
+          </div>          </div>
+
+        </div>        </div>
+
+        <div class="flex items-center">        <div class="flex items-center">
+
+          <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium">          <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+
+            Profile            Profile
+
+          </button>          </button>
+
+        </div>        </div>
+
+      </div>      </div>
+
+    </div>    </div>
+
+  </nav>  </nav>
+
+
+
+  <!-- Main Content -->  <!-- Main Content -->
+
+  <main>  <main>
+
+    <router-outlet></router-outlet>    <router-outlet></router-outlet>
+
+  </main>  </main>
+
+</div></div>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
     --electric-violet: oklch(53.18% 0.28 296.97);
