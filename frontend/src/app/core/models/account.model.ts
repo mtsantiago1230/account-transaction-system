@@ -1,4 +1,4 @@
-export type AccountType = 'checking' | 'savings' | 'credit';
+export type AccountType = 'CHECKING' | 'SAVINGS' | 'BUSINESS';
 
 export interface Account {
   id: string;
@@ -23,7 +23,8 @@ export interface CreateAccountDto {
   userId: string;
   holderName: string;
   accountType: AccountType;
-  currency?: string;
+  currency: string;
+  initialBalance?: number;
 }
 
 export interface UpdateAccountDto {

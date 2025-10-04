@@ -28,11 +28,19 @@ export const routes: Routes = [
     canActivate: [authGuard], // Protect this route
   },
   {
-    path: 'accounts/:id',
+    path: 'accounts/create',
     loadComponent: () =>
-      import('./features/account-detail/components/account-detail.component').then(
-        (m) => m.AccountDetailComponent
+      import('./features/accounts/components/create-account.component').then(
+        (m) => m.CreateAccountComponent
       ),
+    canActivate: [authGuard], // Protect this route
+  },
+  {
+    path: 'accounts/:id',
+    loadComponent: async () => {
+      const { AccountDetailComponent } = await import('./features/account-detail/components/account-detail.component');
+      return AccountDetailComponent;
+    },
     canActivate: [authGuard], // Protect this route
   },
   {

@@ -58,7 +58,9 @@ export class AccountController {
 
   @Get()
   async getAllAccounts(): Promise<AccountResponseDto[]> {
+    console.log('AccountController - getAllAccounts called');
     const accounts = await this.getAllAccountsUseCase.execute();
+    console.log('AccountController - Found accounts:', accounts.length);
     return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,

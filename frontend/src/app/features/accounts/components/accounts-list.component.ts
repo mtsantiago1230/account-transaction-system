@@ -152,8 +152,7 @@ export class AccountsListComponent implements OnInit {
   }
 
   createAccount(): void {
-    // Navigate to create account form - implement when create account page is ready
-    console.log('Navigate to create account');
+    this.router.navigate(['/accounts/create']);
   }
 
   viewAccountDetail(accountId: string): void {

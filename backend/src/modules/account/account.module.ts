@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountEntity } from '../../infrastructure/database/entities/account.entity';
+import { UserEntity } from '../../infrastructure/database/entities/user.entity';
 import { AccountRepository } from '../../infrastructure/repositories/account.repository';
 import { AccountController } from '../../interfaces/controllers/account.controller';
 import {
@@ -15,7 +16,7 @@ import {
 import { UserModule } from './user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountEntity]), UserModule],
+  imports: [TypeOrmModule.forFeature([AccountEntity, UserEntity]), UserModule],
   controllers: [AccountController],
   providers: [
     AccountRepository,
