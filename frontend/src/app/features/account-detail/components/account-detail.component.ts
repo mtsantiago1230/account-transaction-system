@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountService } from '../../../core/services/account.service';
 import { TransactionService } from '../../../core/services/transaction.service';
+import { TransactionResult } from '../../../core/services/simple-transaction.service';
 import { Account } from '../../../core/models/account.model';
 import { Transaction } from '../../../core/models/transaction.model';
 import {
@@ -12,6 +13,7 @@ import {
   ButtonComponent,
 } from '../../../shared/components';
 import { CurrencyPipe } from '../../../shared/pipes';
+import { TransactionFormComponent } from '../../transaction/components/transaction-form.component';
 
 @Component({
   selector: 'app-account-detail',
@@ -23,6 +25,7 @@ import { CurrencyPipe } from '../../../shared/pipes';
     CardComponent,
     ButtonComponent,
     CurrencyPipe,
+    TransactionFormComponent,
   ],
   template: `
     <div class="container mx-auto px-4 py-8">
@@ -57,9 +60,8 @@ import { CurrencyPipe } from '../../../shared/pipes';
               <p class="text-gray-600">{{ account.accountNumber }}</p>
               <p class="text-lg font-medium text-gray-800">{{ account.holderName }}</p>
             </div>
-            <div class="flex space-x-3">
-              <app-button variant="outline">Edit Account</app-button>
-              <app-button variant="primary">New Transaction</app-button>
+            <div class="flex justify-end">
+              <app-button variant="primary" (click)="openTransactionForm()">New Transaction</app-button>
             </div>
           </div>
         </div>
@@ -184,6 +186,21 @@ import { CurrencyPipe } from '../../../shared/pipes';
           </div>
         </app-card>
       </div>
+
+      <!-- Transaction Form Modal -->
+      <div
+        *ngIf="showTransactionForm"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        (click)="closeTransactionForm()"
+      >
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" (click)="$event.stopPropagation()">
+          <app-transaction-form
+            [account]="account"
+            (transactionCreated)="onTransactionCreated($event)"
+            (cancelled)="closeTransactionForm()"
+          ></app-transaction-form>
+        </div>
+      </div>
     </div>
   `,
   styles: [],
@@ -195,6 +212,7 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
   loadingTransactions = true;
   error: string | null = null;
   transactionError: string | null = null;
+  showTransactionForm = false;
 
   private accountId: string | null = null;
   private subscriptions: Subscription[] = [];
@@ -275,5 +293,31 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
 
   retry(): void {
     this.loadAccountDetails();
+  }
+
+  openTransactionForm(): void {
+    this.showTransactionForm = true;
+  }
+
+  closeTransactionForm(): void {
+    this.showTransactionForm = false;
+  }
+
+  onTransactionCreated(result: TransactionResult): void {
+    console.log('Transaction created, refreshing data:', result);
+    
+    // Update account balance if available
+    if (this.account) {
+      this.account = {
+        ...this.account,
+        balance: result.newBalance
+      };
+    }
+    
+    // Reload transactions to show the new one
+    this.loadTransactions();
+    
+    // Close the form
+    this.closeTransactionForm();
   }
 }

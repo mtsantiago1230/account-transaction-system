@@ -38,7 +38,9 @@ export const routes: Routes = [
   {
     path: 'accounts/:id',
     loadComponent: async () => {
-      const { AccountDetailComponent } = await import('./features/account-detail/components/account-detail.component');
+      const { AccountDetailComponent } = await import(
+        './features/account-detail/components/account-detail.component'
+      );
       return AccountDetailComponent;
     },
     canActivate: [authGuard], // Protect this route
