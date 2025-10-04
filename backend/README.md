@@ -20,6 +20,7 @@ A NestJS backend application with TypeScript, TypeORM, and PostgreSQL for managi
 ## Environment Setup
 
 1. Copy the environment template:
+
    ```bash
    cp .env.example .env
    ```
@@ -35,6 +36,7 @@ A NestJS backend application with TypeScript, TypeORM, and PostgreSQL for managi
 ## Installation
 
 Install dependencies:
+
 ```bash
 npm install
 ```
@@ -47,12 +49,15 @@ npm install
 ## Running the Application
 
 ### Development Mode
+
 ```bash
 npm run start:dev
 ```
+
 The application will start with hot-reload enabled on `http://localhost:3000`
 
 ### Production Mode
+
 ```bash
 npm run build
 npm run start:prod
@@ -61,21 +66,25 @@ npm run start:prod
 ## Testing
 
 ### Run Tests
+
 ```bash
 npm run test
 ```
 
 ### Run Tests in Watch Mode
+
 ```bash
 npm run test:watch
 ```
 
 ### Run End-to-End Tests
+
 ```bash
 npm run test:e2e
 ```
 
 ### Test Coverage
+
 ```bash
 npm run test:cov
 ```
@@ -102,12 +111,13 @@ src/
 The application uses the `@nestjs/config` package for configuration management. All configurations are loaded from environment variables and organized into separate configuration files:
 
 - **Database Config**: PostgreSQL connection settings
-- **JWT Config**: JWT secret and expiration settings  
+- **JWT Config**: JWT secret and expiration settings
 - **App Config**: Application port and environment settings
 
 ## TypeORM Integration
 
 TypeORM is configured to:
+
 - Connect to PostgreSQL using the `DATABASE_URL`
 - Auto-discover entities from the `entities` directory
 - Enable synchronization in development mode
@@ -139,6 +149,7 @@ TypeORM is configured to:
 ## License
 
 This project is licensed under the UNLICENSED license.
+
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
