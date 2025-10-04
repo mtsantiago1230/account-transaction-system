@@ -12,6 +12,9 @@ export class CreateAccountDto {
   @IsUUID()
   userId: string;
 
+  @IsString()
+  holderName: string;
+
   @IsEnum(AccountType)
   accountType: AccountType;
 
@@ -36,6 +39,7 @@ export class UpdateAccountDto {
 export class AccountResponseDto {
   id: string;
   userId: string;
+  holderName: string;
   accountNumber: string;
   accountType: AccountType;
   balance: number;

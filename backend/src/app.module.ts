@@ -7,6 +7,7 @@ import configuration from './config';
 import { UserModule } from './modules/account/user.module';
 import { AccountModule } from './modules/account/account.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
+import { SimpleTransactionModule } from './modules/simple-transaction/simple-transaction.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AccountModule,
     TransactionModule,
+    SimpleTransactionModule,
     AuthModule,
   ],
   controllers: [AppController],

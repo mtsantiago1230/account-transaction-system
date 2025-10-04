@@ -40,6 +40,7 @@ import { CurrencyPipe } from '../../../shared/pipes';
                   {{ account.accountType | titlecase }} Account
                 </h1>
                 <p class="text-gray-600">{{ account.accountNumber }}</p>
+                <p class="text-lg font-medium text-gray-800">{{ account.holderName }}</p>
               </div>
               <div class="flex space-x-3">
                 <app-button variant="outline">Edit Account</app-button>
@@ -86,8 +87,13 @@ import { CurrencyPipe } from '../../../shared/pipes';
           </div>
 
           <!-- Recent Transactions -->
-          <app-card title="Recent Transactions" subtitle="Latest account activity">
-            <div *ngIf="loadingTransactions" class="flex justify-center py-4">
+          <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h2 class="text-lg font-medium text-gray-900">Recent Transactions</h2>
+              <p class="text-sm text-gray-600">Latest account activity</p>
+            </div>
+
+            <div *ngIf="loadingTransactions" class="flex justify-center py-8">
               <app-loading-spinner message="Loading transactions..."></app-loading-spinner>
             </div>
 
@@ -97,76 +103,82 @@ import { CurrencyPipe } from '../../../shared/pipes';
                   No transactions found for this account.
                 </div>
 
-                <div *ngIf="transactions.length > 0" class="space-y-4">
-                  <div
-                    *ngFor="let transaction of transactions"
-                    class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-                  >
-                    <div class="flex items-center space-x-4">
-                      <div
-                        class="w-10 h-10 rounded-full flex items-center justify-center"
-                        [class.bg-green-100]="transaction.type === 'deposit'"
-                        [class.bg-red-100]="transaction.type === 'withdrawal'"
-                        [class.bg-blue-100]="transaction.type === 'transfer'"
-                        [class.bg-purple-100]="transaction.type === 'payment'"
-                      >
-                        <span
-                          class="text-sm font-medium"
-                          [class.text-green-600]="transaction.type === 'deposit'"
-                          [class.text-red-600]="transaction.type === 'withdrawal'"
-                          [class.text-blue-600]="transaction.type === 'transfer'"
-                          [class.text-purple-600]="transaction.type === 'payment'"
-                        >
-                          {{ transaction.type.charAt(0).toUpperCase() }}
-                        </span>
-                      </div>
-
-                      <div>
-                        <div class="font-medium">{{ transaction.description }}</div>
-                        <div class="text-sm text-gray-600">
-                          {{ transaction.createdAt | date : 'medium' }} • Ref:
-                          {{ transaction.reference }}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="text-right">
-                      <div
-                        class="font-semibold"
-                        [class.text-green-600]="transaction.type === 'deposit'"
-                        [class.text-red-600]="transaction.type === 'withdrawal'"
-                      >
-                        {{ transaction.type === 'deposit' ? '+' : '-'
-                        }}{{ transaction.amount | currency : transaction.currency }}
-                      </div>
-                      <div
-                        class="text-xs px-2 py-1 rounded-full"
-                        [class.bg-green-100]="transaction.status === 'completed'"
-                        [class.text-green-800]="transaction.status === 'completed'"
-                        [class.bg-yellow-100]="transaction.status === 'pending'"
-                        [class.text-yellow-800]="transaction.status === 'pending'"
-                        [class.bg-red-100]="
-                          transaction.status === 'failed' || transaction.status === 'cancelled'
-                        "
-                        [class.text-red-800]="
-                          transaction.status === 'failed' || transaction.status === 'cancelled'
-                        "
-                      >
-                        {{ transaction.status | titlecase }}
-                      </div>
-                    </div>
-                  </div>
+                <div *ngIf="transactions.length > 0">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amount
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Date
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Description
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr *ngFor="let transaction of transactions" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span
+                              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                              [class.bg-green-100]="transaction.type === 'deposit'"
+                              [class.text-green-800]="transaction.type === 'deposit'"
+                              [class.bg-red-100]="transaction.type === 'withdrawal'"
+                              [class.text-red-800]="transaction.type === 'withdrawal'"
+                              [class.bg-blue-100]="transaction.type === 'transfer'"
+                              [class.text-blue-800]="transaction.type === 'transfer'"
+                              [class.bg-purple-100]="transaction.type === 'payment'"
+                              [class.text-purple-800]="transaction.type === 'payment'"
+                            >
+                              {{ transaction.type | titlecase }}
+                            </span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <span
+                            [class.text-green-600]="transaction.type === 'deposit'"
+                            [class.text-red-600]="transaction.type === 'withdrawal'"
+                            [class.text-gray-900]="transaction.type === 'transfer' || transaction.type === 'payment'"
+                          >
+                            {{ transaction.type === 'deposit' ? '+' : '-' }}{{ transaction.amount | currency : transaction.currency }}
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {{ transaction.createdAt | date : 'short' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                            [class.bg-green-100]="transaction.status === 'completed'"
+                            [class.text-green-800]="transaction.status === 'completed'"
+                            [class.bg-yellow-100]="transaction.status === 'pending'"
+                            [class.text-yellow-800]="transaction.status === 'pending'"
+                            [class.bg-red-100]="transaction.status === 'failed' || transaction.status === 'cancelled'"
+                            [class.text-red-800]="transaction.status === 'failed' || transaction.status === 'cancelled'"
+                          >
+                            {{ transaction.status | titlecase }}
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <div>{{ transaction.description }}</div>
+                          <div class="text-xs text-gray-500">Ref: {{ transaction.reference }}</div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-
-              <div
-                slot="footer"
-                *ngIf="(transactions$ | async)?.length && (transactions$ | async)!.length > 0"
-              >
-                <app-button variant="outline" [fullWidth]="true">View All Transactions</app-button>
-              </div>
             </div>
-          </app-card>
+          </div>
         </div>
       </div>
     </div>

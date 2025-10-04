@@ -94,6 +94,7 @@ export class AccountRepository implements IAccountRepository {
     return {
       id: accountEntity.id,
       userId: accountEntity.userId,
+      holderName: accountEntity.holderName,
       accountNumber: accountEntity.accountNumber,
       accountType: accountEntity.accountType,
       balance: Number(accountEntity.balance),

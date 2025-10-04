@@ -1,6 +1,7 @@
 export interface Account {
   id: string;
   userId: string;
+  holderName: string;
   accountNumber: string;
   accountType: AccountType;
   balance: number;
@@ -18,6 +19,7 @@ export enum AccountType {
 
 export interface CreateAccountRequest {
   userId: string;
+  holderName: string;
   accountType: AccountType;
   currency: string;
   initialBalance?: number;

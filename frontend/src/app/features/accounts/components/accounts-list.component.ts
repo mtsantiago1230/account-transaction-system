@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AccountService } from '../../../core/services/account.service';
 import { Account } from '../../../core/models/account.model';
@@ -33,30 +33,66 @@ import { CurrencyPipe } from '../../../shared/pipes';
         <app-loading-spinner size="lg" message="Loading accounts..."></app-loading-spinner>
       </div>
 
-      <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          *ngFor="let account of accounts$ | async"
-          class="cursor-pointer hover:shadow-lg transition-shadow"
-        >
-          <app-card
-            [title]="account.accountType | titlecase"
-            [subtitle]="account.accountNumber"
-            (click)="viewAccountDetail(account.id)"
-          >
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">Balance</span>
+      <div *ngIf="!loading" class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Account Number
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Holder Name
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Balance
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Type
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr
+              *ngFor="let account of accounts$ | async"
+              class="hover:bg-gray-50 cursor-pointer transition-colors"
+              (click)="viewAccountDetail(account.id)"
+            >
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ account.accountNumber }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ account.holderName }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <span
-                  class="text-lg font-semibold"
                   [class.text-green-600]="account.balance >= 0"
                   [class.text-red-600]="account.balance < 0"
                 >
                   {{ account.balance | currency : account.currency }}
                 </span>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">Status</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <span class="capitalize">{{ account.accountType }}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
                 <span
                   class="px-2 py-1 rounded-full text-xs font-medium"
                   [class.bg-green-100]="account.isActive"
@@ -66,22 +102,26 @@ import { CurrencyPipe } from '../../../shared/pipes';
                 >
                   {{ account.isActive ? 'Active' : 'Inactive' }}
                 </span>
-              </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button
+                  (click)="$event.stopPropagation(); viewAccountDetail(account.id)"
+                  class="text-indigo-600 hover:text-indigo-900 mr-4"
+                >
+                  View Details
+                </button>
+                <button
+                  (click)="$event.stopPropagation(); editAccount(account.id)"
+                  class="text-gray-600 hover:text-gray-900"
+                >
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600">Currency</span>
-                <span class="text-sm font-medium">{{ account.currency }}</span>
-              </div>
-            </div>
-
-            <div slot="footer" class="flex space-x-2">
-              <app-button variant="outline" size="sm" [fullWidth]="true"> Edit </app-button>
-              <app-button variant="primary" size="sm" [fullWidth]="true"> View Details </app-button>
-            </div>
-          </app-card>
-        </div>
-
-        <div *ngIf="!loading && (accounts$ | async)?.length === 0" class="text-center py-12">
+        <div *ngIf="(accounts$ | async)?.length === 0" class="text-center py-12">
           <div class="text-gray-500 text-lg mb-4">No accounts found</div>
           <app-button variant="primary" (click)="createAccount()">
             Create Your First Account
@@ -96,7 +136,7 @@ export class AccountsListComponent implements OnInit {
   accounts$!: Observable<Account[]>;
   loading = true;
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -112,12 +152,16 @@ export class AccountsListComponent implements OnInit {
   }
 
   createAccount(): void {
-    // Navigate to create account form
+    // Navigate to create account form - implement when create account page is ready
     console.log('Navigate to create account');
   }
 
   viewAccountDetail(accountId: string): void {
-    // Navigate to account detail
-    console.log('Navigate to account detail:', accountId);
+    this.router.navigate(['/accounts', accountId]);
+  }
+
+  editAccount(accountId: string): void {
+    // Navigate to edit account form - implement when edit account page is ready
+    console.log('Navigate to edit account:', accountId);
   }
 }

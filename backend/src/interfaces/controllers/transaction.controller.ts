@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CreateTransactionUseCase,
@@ -24,7 +25,9 @@ import {
   TransactionResponseDto,
   DateRangeDto,
 } from '../dtos/transaction.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export class TransactionController {
   constructor(

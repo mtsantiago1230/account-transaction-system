@@ -3,6 +3,7 @@ export type AccountType = 'checking' | 'savings' | 'credit';
 export interface Account {
   id: string;
   userId: string;
+  holderName: string;
   accountNumber: string;
   accountType: AccountType;
   balance: number;
@@ -20,6 +21,7 @@ export interface Account {
 
 export interface CreateAccountDto {
   userId: string;
+  holderName: string;
   accountType: AccountType;
   currency?: string;
 }

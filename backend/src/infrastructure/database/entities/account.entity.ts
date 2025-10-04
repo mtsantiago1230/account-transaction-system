@@ -18,6 +18,9 @@ export class AccountEntity {
   @Column()
   userId: string;
 
+  @Column()
+  holderName: string;
+
   @Column({ unique: true })
   accountNumber: string;
 

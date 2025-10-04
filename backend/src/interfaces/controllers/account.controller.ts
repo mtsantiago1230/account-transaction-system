@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CreateAccountUseCase,
@@ -21,7 +22,9 @@ import {
   UpdateAccountDto,
   AccountResponseDto,
 } from '../dtos/account.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('accounts')
 export class AccountController {
   constructor(
@@ -42,6 +45,7 @@ export class AccountController {
     return {
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -58,6 +62,7 @@ export class AccountController {
     return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -76,6 +81,7 @@ export class AccountController {
     return {
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -94,6 +100,7 @@ export class AccountController {
     return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -112,6 +119,7 @@ export class AccountController {
     return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -130,6 +138,7 @@ export class AccountController {
     return {
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
@@ -152,6 +161,7 @@ export class AccountController {
     return {
       id: account.id,
       userId: account.userId,
+      holderName: account.holderName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
       balance: account.balance,
