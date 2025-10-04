@@ -1,13 +1,13 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Put, 
-  Delete, 
-  Body, 
-  Param, 
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
   HttpStatus,
-  ParseUUIDPipe 
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   CreateUserUseCase,
@@ -17,7 +17,11 @@ import {
   DeleteUserUseCase,
   GetAllUsersUseCase,
 } from '../../application/use-cases/account/user.use-cases';
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from '../dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserResponseDto,
+} from '../dtos/user.dto';
 
 @Controller('users')
 export class UserController {
@@ -31,7 +35,9 @@ export class UserController {
   ) {}
 
   @Post()
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<UserResponseDto> {
     const user = await this.createUserUseCase.execute(createUserDto);
     return {
       id: user.id,
@@ -46,7 +52,7 @@ export class UserController {
   @Get()
   async getAllUsers(): Promise<UserResponseDto[]> {
     const users = await this.getAllUsersUseCase.execute();
-    return users.map(user => ({
+    return users.map((user) => ({
       id: user.id,
       email: user.email,
       firstName: user.firstName,
@@ -57,7 +63,9 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<UserResponseDto> {
+  async getUserById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserResponseDto> {
     const user = await this.getUserUseCase.execute(id);
     return {
       id: user.id,
@@ -70,7 +78,9 @@ export class UserController {
   }
 
   @Get('email/:email')
-  async getUserByEmail(@Param('email') email: string): Promise<UserResponseDto> {
+  async getUserByEmail(
+    @Param('email') email: string,
+  ): Promise<UserResponseDto> {
     const user = await this.getUserByEmailUseCase.execute(email);
     return {
       id: user.id,
@@ -99,7 +109,9 @@ export class UserController {
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id', ParseUUIDPipe) id: string): Promise<{ message: string }> {
+  async deleteUser(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<{ message: string }> {
     await this.deleteUserUseCase.execute(id);
     return { message: 'User deleted successfully' };
   }

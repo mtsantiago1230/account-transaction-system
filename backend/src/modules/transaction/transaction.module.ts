@@ -16,10 +16,7 @@ import {
 import { AccountModule } from '../account/account.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([TransactionEntity]),
-    AccountModule,
-  ],
+  imports: [TypeOrmModule.forFeature([TransactionEntity]), AccountModule],
   controllers: [TransactionController],
   providers: [
     TransactionRepository,

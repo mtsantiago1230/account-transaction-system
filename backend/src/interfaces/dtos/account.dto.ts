@@ -1,4 +1,11 @@
-import { IsString, IsEnum, IsOptional, IsNumber, IsPositive, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  IsPositive,
+  IsUUID,
+} from 'class-validator';
 import { AccountType } from '../../domain/entities/account.entity';
 
 export class CreateAccountDto {

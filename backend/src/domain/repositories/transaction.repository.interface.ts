@@ -1,4 +1,9 @@
-import { Transaction, CreateTransactionRequest, UpdateTransactionRequest, TransactionStatus } from '../entities/transaction.entity';
+import {
+  Transaction,
+  CreateTransactionRequest,
+  UpdateTransactionRequest,
+  TransactionStatus,
+} from '../entities/transaction.entity';
 
 export interface ITransactionRepository {
   findById(id: string): Promise<Transaction | null>;
@@ -7,8 +12,15 @@ export interface ITransactionRepository {
   findAll(): Promise<Transaction[]>;
   findByDateRange(startDate: Date, endDate: Date): Promise<Transaction[]>;
   create(transactionData: CreateTransactionRequest): Promise<Transaction>;
-  update(id: string, transactionData: UpdateTransactionRequest): Promise<Transaction | null>;
+  update(
+    id: string,
+    transactionData: UpdateTransactionRequest,
+  ): Promise<Transaction | null>;
   updateStatus(id: string, status: TransactionStatus): Promise<boolean>;
   findPendingTransactions(): Promise<Transaction[]>;
-  findByAccountIdAndDateRange(accountId: string, startDate: Date, endDate: Date): Promise<Transaction[]>;
+  findByAccountIdAndDateRange(
+    accountId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Transaction[]>;
 }

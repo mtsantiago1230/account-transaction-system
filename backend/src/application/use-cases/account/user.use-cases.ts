@@ -1,11 +1,22 @@
-import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import type { IUserRepository } from '../../../domain/repositories/user.repository.interface';
-import { User, CreateUserRequest, UpdateUserRequest } from '../../../domain/entities/user.entity';
+import {
+  User,
+  CreateUserRequest,
+  UpdateUserRequest,
+} from '../../../domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(userData: CreateUserRequest): Promise<User> {
     // Check if user already exists
@@ -27,7 +38,9 @@ export class CreateUserUseCase {
 
 @Injectable()
 export class GetUserUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
@@ -40,7 +53,9 @@ export class GetUserUseCase {
 
 @Injectable()
 export class GetUserByEmailUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
@@ -53,7 +68,9 @@ export class GetUserByEmailUseCase {
 
 @Injectable()
 export class UpdateUserUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(id: string, userData: UpdateUserRequest): Promise<User> {
     const existingUser = await this.userRepository.findById(id);
@@ -63,7 +80,9 @@ export class UpdateUserUseCase {
 
     // Check if email is being updated and if it's already taken
     if (userData.email && userData.email !== existingUser.email) {
-      const emailExists = await this.userRepository.existsByEmail(userData.email);
+      const emailExists = await this.userRepository.existsByEmail(
+        userData.email,
+      );
       if (emailExists) {
         throw new ConflictException('Email already in use');
       }
@@ -80,7 +99,9 @@ export class UpdateUserUseCase {
 
 @Injectable()
 export class DeleteUserUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(id: string): Promise<void> {
     const user = await this.userRepository.findById(id);
@@ -97,7 +118,9 @@ export class DeleteUserUseCase {
 
 @Injectable()
 export class GetAllUsersUseCase {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(): Promise<User[]> {
     return this.userRepository.findAll();

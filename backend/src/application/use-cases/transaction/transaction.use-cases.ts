@@ -1,25 +1,36 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import type { ITransactionRepository } from '../../../domain/repositories/transaction.repository.interface';
 import type { IAccountRepository } from '../../../domain/repositories/account.repository.interface';
-import { 
-  Transaction, 
-  CreateTransactionRequest, 
-  UpdateTransactionRequest, 
-  TransactionStatus, 
-  TransactionType 
+import {
+  Transaction,
+  CreateTransactionRequest,
+  UpdateTransactionRequest,
+  TransactionStatus,
+  TransactionType,
 } from '../../../domain/entities/transaction.entity';
 
 @Injectable()
 export class CreateTransactionUseCase {
   constructor(
-    @Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository,
-    @Inject('IAccountRepository') private readonly accountRepository: IAccountRepository,
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
   ) {}
 
-  async execute(transactionData: CreateTransactionRequest): Promise<Transaction> {
+  async execute(
+    transactionData: CreateTransactionRequest,
+  ): Promise<Transaction> {
     // Validate accounts exist
     if (transactionData.fromAccountId) {
-      const fromAccount = await this.accountRepository.findById(transactionData.fromAccountId);
+      const fromAccount = await this.accountRepository.findById(
+        transactionData.fromAccountId,
+      );
       if (!fromAccount) {
         throw new NotFoundException('Source account not found');
       }
@@ -29,7 +40,9 @@ export class CreateTransactionUseCase {
     }
 
     if (transactionData.toAccountId) {
-      const toAccount = await this.accountRepository.findById(transactionData.toAccountId);
+      const toAccount = await this.accountRepository.findById(
+        transactionData.toAccountId,
+      );
       if (!toAccount) {
         throw new NotFoundException('Destination account not found');
       }
@@ -41,7 +54,9 @@ export class CreateTransactionUseCase {
     // Validate transaction type requirements
     if (transactionData.type === TransactionType.TRANSFER) {
       if (!transactionData.fromAccountId || !transactionData.toAccountId) {
-        throw new BadRequestException('Transfer requires both source and destination accounts');
+        throw new BadRequestException(
+          'Transfer requires both source and destination accounts',
+        );
       }
     }
 
@@ -70,12 +85,15 @@ export class CreateTransactionUseCase {
 @Injectable()
 export class ProcessTransactionUseCase {
   constructor(
-    @Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository,
-    @Inject('IAccountRepository') private readonly accountRepository: IAccountRepository,
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
   ) {}
 
   async execute(transactionId: string): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findById(transactionId);
+    const transaction =
+      await this.transactionRepository.findById(transactionId);
     if (!transaction) {
       throw new NotFoundException('Transaction not found');
     }
@@ -102,13 +120,20 @@ export class ProcessTransactionUseCase {
       }
 
       // Update transaction status to completed
-      await this.transactionRepository.updateStatus(transactionId, TransactionStatus.COMPLETED);
-      
-      const updatedTransaction = await this.transactionRepository.findById(transactionId);
+      await this.transactionRepository.updateStatus(
+        transactionId,
+        TransactionStatus.COMPLETED,
+      );
+
+      const updatedTransaction =
+        await this.transactionRepository.findById(transactionId);
       return updatedTransaction!;
     } catch (error) {
       // Update transaction status to failed
-      await this.transactionRepository.updateStatus(transactionId, TransactionStatus.FAILED);
+      await this.transactionRepository.updateStatus(
+        transactionId,
+        TransactionStatus.FAILED,
+      );
       throw error;
     }
   }
@@ -118,7 +143,9 @@ export class ProcessTransactionUseCase {
       throw new BadRequestException('Source account required for withdrawal');
     }
 
-    const account = await this.accountRepository.findById(transaction.fromAccountId);
+    const account = await this.accountRepository.findById(
+      transaction.fromAccountId,
+    );
     if (!account) {
       throw new NotFoundException('Source account not found');
     }
@@ -128,7 +155,10 @@ export class ProcessTransactionUseCase {
     }
 
     const newBalance = account.balance - transaction.amount;
-    await this.accountRepository.updateBalance(transaction.fromAccountId, newBalance);
+    await this.accountRepository.updateBalance(
+      transaction.fromAccountId,
+      newBalance,
+    );
   }
 
   private async processDeposit(transaction: Transaction): Promise<void> {
@@ -136,13 +166,18 @@ export class ProcessTransactionUseCase {
       throw new BadRequestException('Destination account required for deposit');
     }
 
-    const account = await this.accountRepository.findById(transaction.toAccountId);
+    const account = await this.accountRepository.findById(
+      transaction.toAccountId,
+    );
     if (!account) {
       throw new NotFoundException('Destination account not found');
     }
 
     const newBalance = account.balance + transaction.amount;
-    await this.accountRepository.updateBalance(transaction.toAccountId, newBalance);
+    await this.accountRepository.updateBalance(
+      transaction.toAccountId,
+      newBalance,
+    );
   }
 
   private async processTransfer(transaction: Transaction): Promise<void> {
@@ -150,8 +185,12 @@ export class ProcessTransactionUseCase {
       throw new BadRequestException('Both accounts required for transfer');
     }
 
-    const fromAccount = await this.accountRepository.findById(transaction.fromAccountId);
-    const toAccount = await this.accountRepository.findById(transaction.toAccountId);
+    const fromAccount = await this.accountRepository.findById(
+      transaction.fromAccountId,
+    );
+    const toAccount = await this.accountRepository.findById(
+      transaction.toAccountId,
+    );
 
     if (!fromAccount) {
       throw new NotFoundException('Source account not found');
@@ -166,11 +205,17 @@ export class ProcessTransactionUseCase {
 
     // Debit from source account
     const newFromBalance = fromAccount.balance - transaction.amount;
-    await this.accountRepository.updateBalance(transaction.fromAccountId, newFromBalance);
+    await this.accountRepository.updateBalance(
+      transaction.fromAccountId,
+      newFromBalance,
+    );
 
     // Credit to destination account
     const newToBalance = toAccount.balance + transaction.amount;
-    await this.accountRepository.updateBalance(transaction.toAccountId, newToBalance);
+    await this.accountRepository.updateBalance(
+      transaction.toAccountId,
+      newToBalance,
+    );
   }
 
   private async processPayment(transaction: Transaction): Promise<void> {
@@ -181,7 +226,10 @@ export class ProcessTransactionUseCase {
 
 @Injectable()
 export class GetTransactionUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(id: string): Promise<Transaction> {
     const transaction = await this.transactionRepository.findById(id);
@@ -194,7 +242,10 @@ export class GetTransactionUseCase {
 
 @Injectable()
 export class GetTransactionsByAccountUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(accountId: string): Promise<Transaction[]> {
     return this.transactionRepository.findByAccountId(accountId);
@@ -203,10 +254,14 @@ export class GetTransactionsByAccountUseCase {
 
 @Injectable()
 export class GetTransactionByReferenceUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(reference: string): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findByReference(reference);
+    const transaction =
+      await this.transactionRepository.findByReference(reference);
     if (!transaction) {
       throw new NotFoundException('Transaction not found');
     }
@@ -216,7 +271,10 @@ export class GetTransactionByReferenceUseCase {
 
 @Injectable()
 export class GetPendingTransactionsUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(): Promise<Transaction[]> {
     return this.transactionRepository.findPendingTransactions();
@@ -225,7 +283,10 @@ export class GetPendingTransactionsUseCase {
 
 @Injectable()
 export class GetTransactionsByDateRangeUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(startDate: Date, endDate: Date): Promise<Transaction[]> {
     return this.transactionRepository.findByDateRange(startDate, endDate);
@@ -234,21 +295,31 @@ export class GetTransactionsByDateRangeUseCase {
 
 @Injectable()
 export class CancelTransactionUseCase {
-  constructor(@Inject('ITransactionRepository') private readonly transactionRepository: ITransactionRepository) {}
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
 
   async execute(transactionId: string): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findById(transactionId);
+    const transaction =
+      await this.transactionRepository.findById(transactionId);
     if (!transaction) {
       throw new NotFoundException('Transaction not found');
     }
 
     if (transaction.status !== TransactionStatus.PENDING) {
-      throw new BadRequestException('Only pending transactions can be cancelled');
+      throw new BadRequestException(
+        'Only pending transactions can be cancelled',
+      );
     }
 
-    await this.transactionRepository.updateStatus(transactionId, TransactionStatus.CANCELLED);
-    
-    const updatedTransaction = await this.transactionRepository.findById(transactionId);
+    await this.transactionRepository.updateStatus(
+      transactionId,
+      TransactionStatus.CANCELLED,
+    );
+
+    const updatedTransaction =
+      await this.transactionRepository.findById(transactionId);
     return updatedTransaction!;
   }
 }

@@ -1,12 +1,22 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import type { IAccountRepository } from '../../../domain/repositories/account.repository.interface';
 import type { IUserRepository } from '../../../domain/repositories/user.repository.interface';
-import { Account, CreateAccountRequest, UpdateAccountRequest } from '../../../domain/entities/account.entity';
+import {
+  Account,
+  CreateAccountRequest,
+  UpdateAccountRequest,
+} from '../../../domain/entities/account.entity';
 
 @Injectable()
 export class CreateAccountUseCase {
   constructor(
-    @Inject('IAccountRepository') private readonly accountRepository: IAccountRepository,
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
   ) {}
 
@@ -24,7 +34,10 @@ export class CreateAccountUseCase {
 
 @Injectable()
 export class GetAccountUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
   async execute(id: string): Promise<Account> {
     const account = await this.accountRepository.findById(id);
@@ -37,7 +50,10 @@ export class GetAccountUseCase {
 
 @Injectable()
 export class GetAccountsByUserUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
   async execute(userId: string): Promise<Account[]> {
     return this.accountRepository.findByUserId(userId);
@@ -46,7 +62,10 @@ export class GetAccountsByUserUseCase {
 
 @Injectable()
 export class GetActiveAccountsByUserUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
   async execute(userId: string): Promise<Account[]> {
     return this.accountRepository.findActiveAccountsByUserId(userId);
@@ -55,9 +74,15 @@ export class GetActiveAccountsByUserUseCase {
 
 @Injectable()
 export class UpdateAccountUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
-  async execute(id: string, accountData: UpdateAccountRequest): Promise<Account> {
+  async execute(
+    id: string,
+    accountData: UpdateAccountRequest,
+  ): Promise<Account> {
     const existingAccount = await this.accountRepository.findById(id);
     if (!existingAccount) {
       throw new NotFoundException('Account not found');
@@ -74,10 +99,14 @@ export class UpdateAccountUseCase {
 
 @Injectable()
 export class GetAccountByNumberUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
   async execute(accountNumber: string): Promise<Account> {
-    const account = await this.accountRepository.findByAccountNumber(accountNumber);
+    const account =
+      await this.accountRepository.findByAccountNumber(accountNumber);
     if (!account) {
       throw new NotFoundException('Account not found');
     }
@@ -87,7 +116,10 @@ export class GetAccountByNumberUseCase {
 
 @Injectable()
 export class GetAllAccountsUseCase {
-  constructor(@Inject('IAccountRepository') private readonly accountRepository: IAccountRepository) {}
+  constructor(
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
+  ) {}
 
   async execute(): Promise<Account[]> {
     return this.accountRepository.findAll();

@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AccountEntity } from '../database/entities/account.entity';
 import { IAccountRepository } from '../../domain/repositories/account.repository.interface';
-import { Account, CreateAccountRequest, UpdateAccountRequest } from '../../domain/entities/account.entity';
+import {
+  Account,
+  CreateAccountRequest,
+  UpdateAccountRequest,
+} from '../../domain/entities/account.entity';
 
 @Injectable()
 export class AccountRepository implements IAccountRepository {
@@ -23,7 +27,9 @@ export class AccountRepository implements IAccountRepository {
   }
 
   async findByAccountNumber(accountNumber: string): Promise<Account | null> {
-    const account = await this.accountRepository.findOne({ where: { accountNumber } });
+    const account = await this.accountRepository.findOne({
+      where: { accountNumber },
+    });
     return account ? this.toDomain(account) : null;
   }
 
@@ -35,20 +41,25 @@ export class AccountRepository implements IAccountRepository {
   async create(accountData: CreateAccountRequest): Promise<Account> {
     // Generate account number
     const accountNumber = await this.generateAccountNumber();
-    
+
     const account = this.accountRepository.create({
       ...accountData,
       accountNumber,
       balance: accountData.initialBalance || 0,
     });
-    
+
     const savedAccount = await this.accountRepository.save(account);
     return this.toDomain(savedAccount);
   }
 
-  async update(id: string, accountData: UpdateAccountRequest): Promise<Account | null> {
+  async update(
+    id: string,
+    accountData: UpdateAccountRequest,
+  ): Promise<Account | null> {
     await this.accountRepository.update(id, accountData);
-    const updatedAccount = await this.accountRepository.findOne({ where: { id } });
+    const updatedAccount = await this.accountRepository.findOne({
+      where: { id },
+    });
     return updatedAccount ? this.toDomain(updatedAccount) : null;
   }
 
@@ -58,20 +69,24 @@ export class AccountRepository implements IAccountRepository {
   }
 
   async updateBalance(id: string, newBalance: number): Promise<boolean> {
-    const result = await this.accountRepository.update(id, { balance: newBalance });
+    const result = await this.accountRepository.update(id, {
+      balance: newBalance,
+    });
     return (result.affected ?? 0) > 0;
   }
 
   async findActiveAccountsByUserId(userId: string): Promise<Account[]> {
-    const accounts = await this.accountRepository.find({ 
-      where: { userId, isActive: true } 
+    const accounts = await this.accountRepository.find({
+      where: { userId, isActive: true },
     });
     return accounts.map(this.toDomain);
   }
 
   private async generateAccountNumber(): Promise<string> {
     const timestamp = Date.now().toString();
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    const random = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0');
     return `ACC${timestamp}${random}`;
   }
 

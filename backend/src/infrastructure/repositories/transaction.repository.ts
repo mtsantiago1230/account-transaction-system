@@ -3,7 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { TransactionEntity } from '../database/entities/transaction.entity';
 import { ITransactionRepository } from '../../domain/repositories/transaction.repository.interface';
-import { Transaction, CreateTransactionRequest, UpdateTransactionRequest, TransactionStatus } from '../../domain/entities/transaction.entity';
+import {
+  Transaction,
+  CreateTransactionRequest,
+  UpdateTransactionRequest,
+  TransactionStatus,
+} from '../../domain/entities/transaction.entity';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
@@ -13,52 +18,63 @@ export class TransactionRepository implements ITransactionRepository {
   ) {}
 
   async findById(id: string): Promise<Transaction | null> {
-    const transaction = await this.transactionRepository.findOne({ where: { id } });
+    const transaction = await this.transactionRepository.findOne({
+      where: { id },
+    });
     return transaction ? this.toDomain(transaction) : null;
   }
 
   async findByAccountId(accountId: string): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.find({
-      where: [
-        { fromAccountId: accountId },
-        { toAccountId: accountId }
-      ],
-      order: { createdAt: 'DESC' }
+      where: [{ fromAccountId: accountId }, { toAccountId: accountId }],
+      order: { createdAt: 'DESC' },
     });
     return transactions.map(this.toDomain);
   }
 
   async findByReference(reference: string): Promise<Transaction | null> {
-    const transaction = await this.transactionRepository.findOne({ where: { reference } });
+    const transaction = await this.transactionRepository.findOne({
+      where: { reference },
+    });
     return transaction ? this.toDomain(transaction) : null;
   }
 
   async findAll(): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.find({
-      order: { createdAt: 'DESC' }
+      order: { createdAt: 'DESC' },
     });
     return transactions.map(this.toDomain);
   }
 
-  async findByDateRange(startDate: Date, endDate: Date): Promise<Transaction[]> {
+  async findByDateRange(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.find({
       where: {
-        createdAt: Between(startDate, endDate)
+        createdAt: Between(startDate, endDate),
       },
-      order: { createdAt: 'DESC' }
+      order: { createdAt: 'DESC' },
     });
     return transactions.map(this.toDomain);
   }
 
-  async create(transactionData: CreateTransactionRequest): Promise<Transaction> {
+  async create(
+    transactionData: CreateTransactionRequest,
+  ): Promise<Transaction> {
     const transaction = this.transactionRepository.create(transactionData);
     const savedTransaction = await this.transactionRepository.save(transaction);
     return this.toDomain(savedTransaction);
   }
 
-  async update(id: string, transactionData: UpdateTransactionRequest): Promise<Transaction | null> {
+  async update(
+    id: string,
+    transactionData: UpdateTransactionRequest,
+  ): Promise<Transaction | null> {
     await this.transactionRepository.update(id, transactionData);
-    const updatedTransaction = await this.transactionRepository.findOne({ where: { id } });
+    const updatedTransaction = await this.transactionRepository.findOne({
+      where: { id },
+    });
     return updatedTransaction ? this.toDomain(updatedTransaction) : null;
   }
 
@@ -70,24 +86,28 @@ export class TransactionRepository implements ITransactionRepository {
   async findPendingTransactions(): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.find({
       where: { status: TransactionStatus.PENDING },
-      order: { createdAt: 'ASC' }
+      order: { createdAt: 'ASC' },
     });
     return transactions.map(this.toDomain);
   }
 
-  async findByAccountIdAndDateRange(accountId: string, startDate: Date, endDate: Date): Promise<Transaction[]> {
+  async findByAccountIdAndDateRange(
+    accountId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.find({
       where: [
         {
           fromAccountId: accountId,
-          createdAt: Between(startDate, endDate)
+          createdAt: Between(startDate, endDate),
         },
         {
           toAccountId: accountId,
-          createdAt: Between(startDate, endDate)
-        }
+          createdAt: Between(startDate, endDate),
+        },
       ],
-      order: { createdAt: 'DESC' }
+      order: { createdAt: 'DESC' },
     });
     return transactions.map(this.toDomain);
   }

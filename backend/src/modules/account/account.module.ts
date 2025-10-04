@@ -15,10 +15,7 @@ import {
 import { UserModule } from './user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([AccountEntity]),
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([AccountEntity]), UserModule],
   controllers: [AccountController],
   providers: [
     AccountRepository,

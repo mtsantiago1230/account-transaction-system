@@ -8,7 +8,10 @@ import {
   JoinColumn,
   BeforeInsert,
 } from 'typeorm';
-import { TransactionType, TransactionStatus } from '../../../domain/entities/transaction.entity';
+import {
+  TransactionType,
+  TransactionStatus,
+} from '../../../domain/entities/transaction.entity';
 
 @Entity('transactions')
 export class TransactionEntity {

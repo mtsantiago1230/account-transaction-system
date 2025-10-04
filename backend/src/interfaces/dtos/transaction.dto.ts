@@ -1,5 +1,15 @@
-import { IsString, IsEnum, IsOptional, IsNumber, IsPositive, IsUUID } from 'class-validator';
-import { TransactionType, TransactionStatus } from '../../domain/entities/transaction.entity';
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  IsPositive,
+  IsUUID,
+} from 'class-validator';
+import {
+  TransactionType,
+  TransactionStatus,
+} from '../../domain/entities/transaction.entity';
 
 export class CreateTransactionDto {
   @IsOptional()

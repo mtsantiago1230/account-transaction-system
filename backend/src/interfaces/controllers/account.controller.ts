@@ -1,11 +1,11 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Put, 
-  Body, 
-  Param, 
-  ParseUUIDPipe 
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   CreateAccountUseCase,
@@ -16,7 +16,11 @@ import {
   GetAccountByNumberUseCase,
   GetAllAccountsUseCase,
 } from '../../application/use-cases/account/account.use-cases';
-import { CreateAccountDto, UpdateAccountDto, AccountResponseDto } from '../dtos/account.dto';
+import {
+  CreateAccountDto,
+  UpdateAccountDto,
+  AccountResponseDto,
+} from '../dtos/account.dto';
 
 @Controller('accounts')
 export class AccountController {
@@ -31,7 +35,9 @@ export class AccountController {
   ) {}
 
   @Post()
-  async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<AccountResponseDto> {
+  async createAccount(
+    @Body() createAccountDto: CreateAccountDto,
+  ): Promise<AccountResponseDto> {
     const account = await this.createAccountUseCase.execute(createAccountDto);
     return {
       id: account.id,
@@ -49,7 +55,7 @@ export class AccountController {
   @Get()
   async getAllAccounts(): Promise<AccountResponseDto[]> {
     const accounts = await this.getAllAccountsUseCase.execute();
-    return accounts.map(account => ({
+    return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
       accountNumber: account.accountNumber,
@@ -63,7 +69,9 @@ export class AccountController {
   }
 
   @Get(':id')
-  async getAccountById(@Param('id', ParseUUIDPipe) id: string): Promise<AccountResponseDto> {
+  async getAccountById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<AccountResponseDto> {
     const account = await this.getAccountUseCase.execute(id);
     return {
       id: account.id,
@@ -79,9 +87,11 @@ export class AccountController {
   }
 
   @Get('user/:userId')
-  async getAccountsByUser(@Param('userId', ParseUUIDPipe) userId: string): Promise<AccountResponseDto[]> {
+  async getAccountsByUser(
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ): Promise<AccountResponseDto[]> {
     const accounts = await this.getAccountsByUserUseCase.execute(userId);
-    return accounts.map(account => ({
+    return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
       accountNumber: account.accountNumber,
@@ -95,9 +105,11 @@ export class AccountController {
   }
 
   @Get('user/:userId/active')
-  async getActiveAccountsByUser(@Param('userId', ParseUUIDPipe) userId: string): Promise<AccountResponseDto[]> {
+  async getActiveAccountsByUser(
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ): Promise<AccountResponseDto[]> {
     const accounts = await this.getActiveAccountsByUserUseCase.execute(userId);
-    return accounts.map(account => ({
+    return accounts.map((account) => ({
       id: account.id,
       userId: account.userId,
       accountNumber: account.accountNumber,
@@ -111,7 +123,9 @@ export class AccountController {
   }
 
   @Get('number/:accountNumber')
-  async getAccountByNumber(@Param('accountNumber') accountNumber: string): Promise<AccountResponseDto> {
+  async getAccountByNumber(
+    @Param('accountNumber') accountNumber: string,
+  ): Promise<AccountResponseDto> {
     const account = await this.getAccountByNumberUseCase.execute(accountNumber);
     return {
       id: account.id,
@@ -131,7 +145,10 @@ export class AccountController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAccountDto: UpdateAccountDto,
   ): Promise<AccountResponseDto> {
-    const account = await this.updateAccountUseCase.execute(id, updateAccountDto);
+    const account = await this.updateAccountUseCase.execute(
+      id,
+      updateAccountDto,
+    );
     return {
       id: account.id,
       userId: account.userId,

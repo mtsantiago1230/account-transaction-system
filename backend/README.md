@@ -1,20 +1,14 @@
 # Account Transaction System - Backend# Account Transaction System - Backend
 
-
-
 A NestJS backend application with TypeScript, TypeORM, PostgreSQL, and Clean Architecture principles for managing account transactions.A NestJS backend application with TypeScript, TypeORM, and PostgreSQL for managing account transactions.
 
-
-
 ## Architecture## Features
-
-
 
 This project follows **Clean Architecture** principles, organizing code into distinct layers:- **NestJS Framework**: Progressive Node.js framework for building scalable server-side applications
 
 - **TypeScript**: Full TypeScript support with strict type checking
 
-```- **TypeORM**: Object-Relational Mapping with PostgreSQL
+````- **TypeORM**: Object-Relational Mapping with PostgreSQL
 
 src/- **Configuration Management**: Environment-based configuration with validation
 
@@ -212,7 +206,7 @@ npm run start:prod
 
    cp .env.example .env```
 
-   ```
+````
 
 ## Configuration
 
@@ -230,6 +224,8 @@ npm run start:prod
 
    ```
 
+   ```
+
 ## TypeORM Integration
 
 ## Installation
@@ -242,7 +238,7 @@ Install dependencies:
 
 npm install- Auto-discover entities from the `entities` directory
 
-```- Enable synchronization in development mode
+````- Enable synchronization in development mode
 
 - Enable logging in development mode
 
@@ -314,19 +310,19 @@ npm install- Auto-discover entities from the `entities` directory
 
 npm run start:dev[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-```
+````
 
 ## Project setup
 
 ### Production Mode
 
-```bash```bash
+`bash`bash
 
 npm run build$ npm install
 
 npm run start:prod```
 
-```
+````
 
 ## Compile and run the project
 
@@ -344,13 +340,13 @@ npm run test:e2e          # Run end-to-end tests# watch mode
 
 npm run test:cov          # Run tests with coverage$ npm run start:dev
 
-```
+````
 
 # production mode
 
 ## Clean Architecture Benefits$ npm run start:prod
 
-```
+````
 
 - **Independence**: Each layer is independent and testable
 
@@ -371,7 +367,7 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
+````
 
 ## Deployment
 
