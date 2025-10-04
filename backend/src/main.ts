@@ -1,14 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>('app.port') || 3000;
+  // ✅ Habilitar CORS para permitir llamadas desde Angular (4200)
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
+    credentials: true,
+  });
 
-  await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
+  await app.listen(3000);
 }
 bootstrap();
