@@ -61,7 +61,9 @@ import { TransactionFormComponent } from '../../transaction/components/transacti
               <p class="text-lg font-medium text-gray-800">{{ account.holderName }}</p>
             </div>
             <div class="flex justify-end">
-              <app-button variant="primary" (click)="openTransactionForm()">New Transaction</app-button>
+              <app-button variant="primary" (click)="openTransactionForm()"
+                >New Transaction</app-button
+              >
             </div>
           </div>
         </div>
@@ -193,7 +195,10 @@ import { TransactionFormComponent } from '../../transaction/components/transacti
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
         (click)="closeTransactionForm()"
       >
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" (click)="$event.stopPropagation()">
+        <div
+          class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+          (click)="$event.stopPropagation()"
+        >
           <app-transaction-form
             [account]="account"
             (transactionCreated)="onTransactionCreated($event)"
@@ -305,18 +310,18 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
 
   onTransactionCreated(result: TransactionResult): void {
     console.log('Transaction created, refreshing data:', result);
-    
+
     // Update account balance if available
     if (this.account) {
       this.account = {
         ...this.account,
-        balance: result.newBalance
+        balance: result.newBalance,
       };
     }
-    
+
     // Reload transactions to show the new one
     this.loadTransactions();
-    
+
     // Close the form
     this.closeTransactionForm();
   }

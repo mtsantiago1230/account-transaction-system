@@ -1,7 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SimpleTransactionService, SimpleTransactionDto, TransactionResult } from '../../../core/services/simple-transaction.service';
+import {
+  SimpleTransactionService,
+  SimpleTransactionDto,
+  TransactionResult,
+} from '../../../core/services/simple-transaction.service';
 import { Account } from '../../../core/models/account.model';
 import {
   LoadingSpinnerComponent,
@@ -25,13 +29,13 @@ import {
         <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
           <!-- Transaction Type -->
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Transaction Type
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-2"> Transaction Type </label>
             <select
               formControlName="type"
               class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="transactionForm.get('type')?.invalid && transactionForm.get('type')?.touched"
+              [class.border-red-500]="
+                transactionForm.get('type')?.invalid && transactionForm.get('type')?.touched
+              "
             >
               <option value="">Select transaction type</option>
               <option value="deposit">Deposit</option>
@@ -57,10 +61,14 @@ import {
               formControlName="amount"
               placeholder="Enter amount"
               class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched"
+              [class.border-red-500]="
+                transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched
+              "
             />
             <div
-              *ngIf="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched"
+              *ngIf="
+                transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched
+              "
               class="mt-1 text-sm text-red-600"
             >
               <div *ngIf="transactionForm.get('amount')?.errors?.['required']">
@@ -86,7 +94,10 @@ import {
           </div>
 
           <!-- Success Message -->
-          <div *ngIf="successMessage" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+          <div
+            *ngIf="successMessage"
+            class="mb-4 p-3 bg-green-50 border border-green-200 rounded-md"
+          >
             <p class="text-green-800 text-sm">{{ successMessage }}</p>
           </div>
 
@@ -135,10 +146,7 @@ export class TransactionFormComponent implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private simpleTransactionService: SimpleTransactionService
-  ) {
+  constructor(private fb: FormBuilder, private simpleTransactionService: SimpleTransactionService) {
     this.transactionForm = this.fb.group({
       type: ['', [Validators.required]],
       amount: ['', [Validators.required, Validators.min(0.01)]],
@@ -171,11 +179,13 @@ export class TransactionFormComponent implements OnInit {
       this.simpleTransactionService.createTransaction(transactionData).subscribe({
         next: (result) => {
           console.log('Transaction created successfully:', result);
-          this.successMessage = `Transaction created successfully! New balance: ${result.newBalance.toFixed(2)} ${this.account?.currency || 'USD'}`;
+          this.successMessage = `Transaction created successfully! New balance: ${result.newBalance.toFixed(
+            2
+          )} ${this.account?.currency || 'USD'}`;
           this.isSubmitting = false;
           this.transactionForm.reset();
           this.transactionCreated.emit(result);
-          
+
           // Auto-close after success
           setTimeout(() => {
             this.onCancel();
@@ -183,7 +193,8 @@ export class TransactionFormComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating transaction:', error);
-          this.errorMessage = error.error?.message || 'Failed to create transaction. Please try again.';
+          this.errorMessage =
+            error.error?.message || 'Failed to create transaction. Please try again.';
           this.isSubmitting = false;
         },
       });
