@@ -83,22 +83,24 @@ src/
 ## Environment Setup
 
 1. Copy the environment template:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Update the `.env` file with your actual configuration:
+
    ```env
    # Database Configuration (Option 1: Full URL)
    DATABASE_URL=postgresql://username:password@localhost:5432/account_transaction_db
-   
+
    # Database Configuration (Option 2: Individual settings)
    DB_HOST=localhost
    DB_PORT=5432
    DB_USERNAME=postgres
    DB_PASSWORD=root
    DB_DATABASE=account_transaction_db
-   
+
    # Application Settings
    JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
    PORT=3000
@@ -108,6 +110,7 @@ src/
 ## Installation
 
 Install dependencies:
+
 ```bash
 npm install
 ```
@@ -124,11 +127,13 @@ npm install
 The application supports two ways to configure the database connection:
 
 #### Option 1: Database URL (Recommended for Production)
+
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 ```
 
 #### Option 2: Individual Environment Variables
+
 ```env
 DB_HOST=localhost
 DB_PORT=5432
@@ -150,21 +155,25 @@ The TypeORM configuration is located in `src/config/typeorm.config.ts` and provi
 ### Database Migrations
 
 Generate a new migration:
+
 ```bash
 npm run migration:generate -- --name CreateInitialTables
 ```
 
 Run migrations:
+
 ```bash
 npm run migration:run
 ```
 
 Revert the last migration:
+
 ```bash
 npm run migration:revert
 ```
 
 Synchronize database schema (development only):
+
 ```bash
 npm run schema:sync
 ```
@@ -172,36 +181,42 @@ npm run schema:sync
 ## Running the Application
 
 ### Development Mode
+
 ```bash
 npm run start:dev
 ```
+
 The application will start with hot-reload enabled on `http://localhost:3000`
 
 ### Production Mode
+
 ```bash
 npm run build
 npm run start:prod
 ```
 
-
 ## Testing
 
 ### Run Tests
+
 ```bash
 npm run test
 ```
 
 ### Run Tests in Watch Mode
+
 ```bash
 npm run test:watch
 ```
 
 ### Run End-to-End Tests
+
 ```bash
 npm run test:e2e
 ```
 
 ### Test Coverage
+
 ```bash
 npm run test:cov
 ```
@@ -209,6 +224,7 @@ npm run test:cov
 ## API Endpoints
 
 ### Users
+
 - `POST /users` - Create a new user
 - `GET /users` - Get all users
 - `GET /users/:id` - Get user by ID
@@ -217,6 +233,7 @@ npm run test:cov
 - `DELETE /users/:id` - Delete user
 
 ### Accounts
+
 - `POST /accounts` - Create a new account
 - `GET /accounts` - Get all accounts
 - `GET /accounts/:id` - Get account by ID
@@ -226,6 +243,7 @@ npm run test:cov
 - `PUT /accounts/:id` - Update account
 
 ### Transactions
+
 - `POST /transactions` - Create a new transaction
 - `PUT /transactions/:id/process` - Process a pending transaction
 - `PUT /transactions/:id/cancel` - Cancel a pending transaction
@@ -238,21 +256,25 @@ npm run test:cov
 ## Clean Architecture Layers
 
 ### 1. Domain Layer (`domain/`)
+
 - **Entities**: Pure business objects with no dependencies
 - **Repository Interfaces**: Contracts for data access
 - **Business Rules**: Core business logic and validation
 
 ### 2. Application Layer (`application/`)
+
 - **Use Cases**: Application-specific business rules
 - **Services**: Orchestration of domain objects and repositories
 - **Business Logic**: Application workflows and processes
 
 ### 3. Infrastructure Layer (`infrastructure/`)
+
 - **Database Entities**: TypeORM entities with database annotations
 - **Repository Implementations**: Concrete implementations of repository interfaces
 - **External Services**: Third-party integrations
 
 ### 4. Interface Layer (`interfaces/`)
+
 - **Controllers**: HTTP request/response handling
 - **DTOs**: Data validation and transformation
 - **Presentation Logic**: User interface concerns

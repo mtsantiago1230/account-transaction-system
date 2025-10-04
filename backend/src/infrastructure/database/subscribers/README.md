@@ -5,7 +5,11 @@ This directory contains TypeORM entity subscribers for handling database events.
 ## Example Subscriber
 
 ```typescript
-import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
+import {
+  EntitySubscriberInterface,
+  EventSubscriber,
+  InsertEvent,
+} from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 
 @EventSubscriber()

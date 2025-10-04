@@ -17,7 +17,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService): TypeOrmModuleOptions => 
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions =>
         configService.get<TypeOrmModuleOptions>('typeorm')!,
       inject: [ConfigService],
     }),

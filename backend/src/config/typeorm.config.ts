@@ -34,11 +34,19 @@ export default registerAs('typeorm', (): TypeOrmModuleOptions => {
     type: 'postgres',
     ...dbConfig,
     entities: [UserEntity, AccountEntity, TransactionEntity],
-    migrations: [__dirname + '/../infrastructure/database/migrations/*{.ts,.js}'],
-    subscribers: [__dirname + '/../infrastructure/database/subscribers/*{.ts,.js}'],
+    migrations: [
+      __dirname + '/../infrastructure/database/migrations/*{.ts,.js}',
+    ],
+    subscribers: [
+      __dirname + '/../infrastructure/database/subscribers/*{.ts,.js}',
+    ],
     synchronize: process.env.NODE_ENV === 'development',
-    logging: process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    logging:
+      process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false,
     autoLoadEntities: true,
     retryAttempts: 5,
     retryDelay: 3000,

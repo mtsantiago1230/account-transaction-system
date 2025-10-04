@@ -38,8 +38,14 @@ export const AppDataSource = new DataSource({
   ...dbConfig,
   entities: [UserEntity, AccountEntity, TransactionEntity],
   migrations: [__dirname + '/../infrastructure/database/migrations/*{.ts,.js}'],
-  subscribers: [__dirname + '/../infrastructure/database/subscribers/*{.ts,.js}'],
+  subscribers: [
+    __dirname + '/../infrastructure/database/subscribers/*{.ts,.js}',
+  ],
   synchronize: false, // Always false for CLI operations
-  logging: process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  logging:
+    process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
 });
