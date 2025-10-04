@@ -1,14 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { HelloService } from '../../core/services/hello.service';
 import { ButtonComponent } from '../../shared/components/button.component';
 import { CardComponent } from '../../shared/components/card.component';
+import { HelloComponent } from '../../shared/components/hello.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonComponent, CardComponent],
+  imports: [CommonModule, RouterLink, ButtonComponent, CardComponent, HelloComponent],
   template: `
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="mb-8">
@@ -16,6 +18,24 @@ import { CardComponent } from '../../shared/components/card.component';
           Welcome back, {{ authService.currentUser()?.email }}!
         </h1>
         <p class="mt-2 text-gray-600">Manage your accounts and view your transaction history.</p>
+
+        <!-- Backend Test Section -->
+        <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+          <h2 class="text-lg font-semibold text-blue-900 mb-2">Backend Connection Test</h2>
+          <app-button (click)="testBackend()" [loading]="isLoading()" variant="outline">
+            Test Backend Connection
+          </app-button>
+          @if (backendMessage()) {
+          <p class="mt-2 text-green-700 font-medium">{{ backendMessage() }}</p>
+          } @if (errorMessage()) {
+          <p class="mt-2 text-red-700">{{ errorMessage() }}</p>
+          }
+        </div>
+      </div>
+
+      <!-- Hello Component Demo -->
+      <div class="mb-8">
+        <app-hello></app-hello>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -72,4 +92,26 @@ import { CardComponent } from '../../shared/components/card.component';
 })
 export class DashboardComponent {
   authService = inject(AuthService);
+  helloService = inject(HelloService);
+
+  isLoading = signal(false);
+  backendMessage = signal<string>('');
+  errorMessage = signal<string>('');
+
+  testBackend(): void {
+    this.isLoading.set(true);
+    this.backendMessage.set('');
+    this.errorMessage.set('');
+
+    this.helloService.getHello().subscribe({
+      next: (response) => {
+        this.backendMessage.set(response.message);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.errorMessage.set('Failed to connect to backend: ' + error.message);
+        this.isLoading.set(false);
+      },
+    });
+  }
 }
