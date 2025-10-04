@@ -12,9 +12,7 @@ export interface Account {
 }
 
 export enum AccountType {
-  CHECKING = 'checking',
   SAVINGS = 'savings',
-  CREDIT = 'credit',
 }
 
 export interface CreateAccountRequest {

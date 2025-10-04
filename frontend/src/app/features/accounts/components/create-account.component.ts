@@ -54,24 +54,14 @@ import {
             <label for="accountType" class="block text-sm font-medium text-gray-700">
               Account Type
             </label>
-            <select
+            <input
+              type="text"
               id="accountType"
-              formControlName="accountType"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select account type</option>
-              <option value="savings">Savings</option>
-              <option value="checking">Checking</option>
-              <option value="credit">Credit</option>
-            </select>
-            <div
-              *ngIf="
-                accountForm.get('accountType')?.invalid && accountForm.get('accountType')?.touched
-              "
-              class="mt-1 text-sm text-red-600"
-            >
-              Account type is required
-            </div>
+              value="Savings Account"
+              readonly
+              class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm bg-gray-50 text-gray-700 cursor-not-allowed"
+            />
+            <p class="mt-1 text-xs text-gray-500">All accounts are Savings accounts</p>
           </div>
 
           <div>
@@ -152,7 +142,7 @@ export class CreateAccountComponent implements OnInit {
   private initForm(): void {
     this.accountForm = this.fb.group({
       holderName: ['', [Validators.required, Validators.minLength(2)]],
-      accountType: ['', Validators.required],
+      accountType: ['savings', Validators.required], // Default to savings since it's the only option
       currency: ['USD', Validators.required],
       initialBalance: [0, [Validators.min(0)]],
     });

@@ -4,14 +4,8 @@ import { authGuard, guestGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: '/accounts',
     pathMatch: 'full',
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-    canActivate: [authGuard],
   },
   {
     path: 'login',
@@ -47,6 +41,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/dashboard',
+    redirectTo: '/accounts',
   },
 ];

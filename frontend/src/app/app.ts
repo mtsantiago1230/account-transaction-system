@@ -20,24 +20,11 @@ import { AuthService } from './core/services/auth.service';
               @if (authService.isAuthenticated()) {
               <div class="hidden md:ml-6 md:flex md:space-x-8">
                 <a
-                  routerLink="/dashboard"
-                  routerLinkActive="border-blue-500 text-gray-900"
-                  class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Dashboard
-                </a>
-                <a
                   routerLink="/accounts"
                   routerLinkActive="border-blue-500 text-gray-900"
                   class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                 >
                   Accounts
-                </a>
-                <a
-                  href="#"
-                  class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Transactions
                 </a>
               </div>
               }

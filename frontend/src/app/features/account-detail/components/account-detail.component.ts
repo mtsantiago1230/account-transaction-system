@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountService } from '../../../core/services/account.service';
 import { TransactionService } from '../../../core/services/transaction.service';
@@ -50,6 +50,21 @@ import { TransactionFormComponent } from '../../transaction/components/transacti
 
       <!-- Loaded State -->
       <div *ngIf="account && !loading && !error">
+        <!-- Back Navigation -->
+        <div class="mb-6">
+          <app-button variant="outline" (click)="goBackToAccounts()">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
+            Back to Accounts
+          </app-button>
+        </div>
+
         <!-- Account Header -->
         <div class="mb-8">
           <div class="flex justify-between items-start mb-4">
@@ -224,6 +239,7 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private accountService: AccountService,
     private transactionService: TransactionService
   ) {
@@ -324,5 +340,9 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
 
     // Close the form
     this.closeTransactionForm();
+  }
+
+  goBackToAccounts(): void {
+    this.router.navigate(['/accounts']);
   }
 }

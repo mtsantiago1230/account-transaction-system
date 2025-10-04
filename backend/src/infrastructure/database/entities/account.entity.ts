@@ -27,7 +27,7 @@ export class AccountEntity {
   @Column({
     type: 'enum',
     enum: AccountType,
-    default: AccountType.CHECKING,
+    default: AccountType.SAVINGS,
   })
   accountType: AccountType;
 

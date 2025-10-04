@@ -106,15 +106,9 @@ import { CurrencyPipe } from '../../../shared/pipes';
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button
                   (click)="$event.stopPropagation(); viewAccountDetail(account.id)"
-                  class="text-indigo-600 hover:text-indigo-900 mr-4"
+                  class="text-indigo-600 hover:text-indigo-900"
                 >
                   View Details
-                </button>
-                <button
-                  (click)="$event.stopPropagation(); editAccount(account.id)"
-                  class="text-gray-600 hover:text-gray-900"
-                >
-                  Edit
                 </button>
               </td>
             </tr>
@@ -157,10 +151,5 @@ export class AccountsListComponent implements OnInit {
 
   viewAccountDetail(accountId: string): void {
     this.router.navigate(['/accounts', accountId]);
-  }
-
-  editAccount(accountId: string): void {
-    // Navigate to edit account form - implement when edit account page is ready
-    console.log('Navigate to edit account:', accountId);
   }
 }

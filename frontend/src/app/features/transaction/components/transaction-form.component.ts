@@ -65,6 +65,15 @@ import {
                 transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched
               "
             />
+
+            <!-- Available Balance Info for Withdrawals -->
+            <div
+              *ngIf="transactionForm.get('type')?.value === 'withdraw' && account"
+              class="mt-1 text-xs text-gray-600"
+            >
+              Available balance: {{ account.balance | currency : account.currency }}
+            </div>
+
             <div
               *ngIf="
                 transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched
@@ -76,6 +85,10 @@ import {
               </div>
               <div *ngIf="transactionForm.get('amount')?.errors?.['min']">
                 Amount must be greater than 0
+              </div>
+              <div *ngIf="transactionForm.get('amount')?.errors?.['insufficientBalance']">
+                Insufficient balance. You can withdraw up to
+                {{ account?.balance | currency : account?.currency }}
               </div>
             </div>
           </div>
@@ -102,8 +115,22 @@ import {
           </div>
 
           <!-- Error Message -->
-          <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-            <p class="text-red-800 text-sm">{{ errorMessage }}</p>
+          <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">Transaction Error</h3>
+                <p class="mt-1 text-sm text-red-700">{{ errorMessage }}</p>
+              </div>
+            </div>
           </div>
 
           <!-- Action Buttons -->
@@ -152,12 +179,53 @@ export class TransactionFormComponent implements OnInit {
       amount: ['', [Validators.required, Validators.min(0.01)]],
       description: [''],
     });
+
+    // Add dynamic validation when transaction type or amount changes
+    this.transactionForm.get('type')?.valueChanges.subscribe(() => {
+      this.updateAmountValidation();
+    });
+
+    this.transactionForm.get('amount')?.valueChanges.subscribe(() => {
+      this.updateAmountValidation();
+    });
   }
 
   ngOnInit(): void {
     if (!this.account) {
       this.errorMessage = 'Account information is required to create a transaction.';
+    } else {
+      // Set up validation now that we have account data
+      this.updateAmountValidation();
     }
+  }
+
+  updateAmountValidation(): void {
+    const amountControl = this.transactionForm.get('amount');
+    const typeControl = this.transactionForm.get('type');
+
+    if (!amountControl || !typeControl || !this.account) return;
+
+    // Clear existing custom validators
+    const validators = [Validators.required, Validators.min(0.01)];
+
+    // Add insufficient balance validator for withdrawals
+    if (typeControl.value === 'withdraw') {
+      validators.push(this.insufficientBalanceValidator.bind(this));
+    }
+
+    amountControl.setValidators(validators);
+    amountControl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  insufficientBalanceValidator(control: any) {
+    if (!this.account || !control.value) return null;
+
+    const amount = parseFloat(control.value);
+    if (amount > this.account.balance) {
+      return { insufficientBalance: true };
+    }
+
+    return null;
   }
 
   onSubmit(): void {
@@ -193,8 +261,19 @@ export class TransactionFormComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating transaction:', error);
-          this.errorMessage =
-            error.error?.message || 'Failed to create transaction. Please try again.';
+
+          // Extract the specific error message from the backend
+          let errorMessage = 'Failed to create transaction. Please try again.';
+
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          } else if (typeof error.error === 'string') {
+            errorMessage = error.error;
+          }
+
+          this.errorMessage = errorMessage;
           this.isSubmitting = false;
         },
       });
