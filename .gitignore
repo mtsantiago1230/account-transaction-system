@@ -1,9 +1,19 @@
-# Dependencies
+########################################
+# Root .gitignore for monorepo (Node/TS)
+# Covers common OS/editor/Node artifacts
+# Project-specific sections at bottom
+########################################
+
+# Dependencies and package managers
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Runtime data
 pids
@@ -11,7 +21,7 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage
 coverage/
 *.lcov
 
@@ -36,13 +46,13 @@ jspm_packages/
 # TypeScript v1 declaration files
 typings/
 
-# TypeScript cache
+# TypeScript
 *.tsbuildinfo
 
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
+# ESLint cache
 .eslintcache
 
 # Microbundle cache
@@ -60,7 +70,7 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# Environment variables
+# Environment variables (never commit secrets)
 .env
 .env.local
 .env.development.local
@@ -72,10 +82,8 @@ typings/
 .cache
 .parcel-cache
 
-# Next.js build output
+# Framework build output
 .next
-
-# Nuxt.js build / generate output
 .nuxt
 dist
 
@@ -95,23 +103,15 @@ temp/
 logs
 *.log
 
-# Angular specific
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# compiled output
+# Angular and Nest build artifacts
 /dist
 /tmp
 /out-tsc
-# Only exists if Bazel was run
 /bazel-out
-
-# Angular build artifacts
 /frontend/dist/
 /frontend/tmp/
 /frontend/out-tsc/
 /frontend/.angular/
-
-# NestJS build artifacts
 /backend/dist/
 /backend/build/
 
@@ -135,7 +135,7 @@ chrome-profiler-events*.json
 !.vscode/extensions.json
 .history/*
 
-# IDE - WebStorm/PhpStorm
+# IDE - JetBrains
 .idea/
 
 # IDE - Atom
@@ -176,11 +176,6 @@ Desktop.ini
 
 # Linux
 *~
-
-# Package manager files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Build tools
 .grunt/
@@ -240,7 +235,7 @@ backend/node_modules/
 backend/coverage/
 backend/uploads/
 
-# Frontend specific  
+# Frontend specific
 frontend/.env*
 frontend/dist/
 frontend/node_modules/

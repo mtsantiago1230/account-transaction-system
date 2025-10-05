@@ -10,6 +10,10 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # IDEs and editors
 .idea/
@@ -33,10 +37,22 @@ yarn-error.log
 .sass-cache/
 /connect.lock
 /coverage
+/coverage-lcov
 /libpeerconnection.log
 testem.log
 /typings
 __screenshots__/
+
+# Environment files (do not commit real secrets)
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Angular cache directory
+/.angular
 
 # System files
 .DS_Store
