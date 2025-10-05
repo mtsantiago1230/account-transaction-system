@@ -51,12 +51,6 @@ import { AuthService } from './core/services/auth.service';
                 >
                   Login
                 </a>
-                <a
-                  href="#"
-                  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-                >
-                  Sign Up
-                </a>
               </div>
               }
             </div>

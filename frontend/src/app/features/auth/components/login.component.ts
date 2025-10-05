@@ -110,20 +110,6 @@ import {
                 {{ isLoading() ? 'Signing in...' : 'Sign in' }}
               </app-button>
             </div>
-
-            <!-- Additional Links -->
-            <div class="flex items-center justify-between">
-              <div class="text-sm">
-                <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
-                  Forgot your password?
-                </a>
-              </div>
-              <div class="text-sm">
-                <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
-                  Create new account
-                </a>
-              </div>
-            </div>
           </form>
         </app-card>
       </div>
