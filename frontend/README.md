@@ -29,8 +29,8 @@ Example (already present):
 
 ```ts
 export const environment = {
-	production: false,
-	apiUrl: 'http://localhost:3000',
+  production: false,
+  apiUrl: 'http://localhost:3000',
 };
 ```
 
@@ -110,9 +110,9 @@ Angular CLI does not include an e2e framework by default—choose one as needed.
 ## Troubleshooting
 
 - 401 Unauthorized on login
-	- Backend must be running and reachable at `environment.apiUrl`.
-	- Seed the test user in the backend: see `backend/src/scripts/seed-test-user.ts`.
-	- Confirm the backend returns tokens as `access_token`.
+  - Backend must be running and reachable at `environment.apiUrl`.
+  - Seed the test user in the backend: see `backend/src/scripts/seed-test-user.ts`.
+  - Confirm the backend returns tokens as `access_token`.
 
 ## Additional Resources
 
