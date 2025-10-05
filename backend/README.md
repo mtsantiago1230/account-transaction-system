@@ -65,7 +65,10 @@ Create the database and run migrations.
 # Create DB (adjust user/password)
 psql -U postgres -c "CREATE DATABASE account_transaction_db;"
 
-# Run migrations
+# Generate initial migration (if needed)
+npm run migration:generate src/infrastructure/database/migrations/InitialMigration
+
+# Run DB migrations
 npm run migration:run
 
 # Create test user (test@example.com / password123)
