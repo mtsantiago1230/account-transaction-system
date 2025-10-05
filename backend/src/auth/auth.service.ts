@@ -32,10 +32,6 @@ export class AuthService {
     const payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload);
 
-    console.log('AuthService - Login - Payload:', payload);
-    console.log('AuthService - Login - Generated token:', token);
-    console.log('AuthService - Login - JWT_SECRET:', process.env.JWT_SECRET);
-
     return {
       access_token: token,
       user: {
@@ -46,20 +42,12 @@ export class AuthService {
   }
 
   async validateToken(payload: any) {
-    console.log('AuthService - validateToken - Received payload:', payload);
-    console.log('AuthService - validateToken - Payload type:', typeof payload);
-    console.log(
-      'AuthService - validateToken - Payload keys:',
-      Object.keys(payload),
-    );
-
     // In a real app, you might want to check if user still exists in database
     const result = {
       id: payload.sub,
       email: payload.email,
     };
 
-    console.log('AuthService - validateToken - Returning result:', result);
     return result;
   }
 }

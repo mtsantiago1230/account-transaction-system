@@ -121,11 +121,6 @@ describe('TransactionController (e2e)', () => {
       testAccountId = savedAccount1.id;
       testAccount2Id = savedAccount2.id;
 
-      console.log('✅ Test accounts created:', {
-        testAccountId,
-        testAccount2Id,
-      });
-
       // VERIFICAR que no sean undefined
       if (!testAccountId || !testAccount2Id) {
         throw new Error('Failed to create test accounts');
@@ -151,9 +146,6 @@ describe('TransactionController (e2e)', () => {
 
   describe('POST /transactions', () => {
     it('should create transfer transaction with valid token and data', async () => {
-      console.log('santi1:testAccountId:', testAccountId);
-      console.log('santi2:testAccount2Id:', testAccount2Id);
-
       const createTransactionDto = {
         fromAccountId: testAccountId,
         toAccountId: testAccount2Id,
@@ -163,22 +155,10 @@ describe('TransactionController (e2e)', () => {
         description: 'Test transfer',
       };
 
-      console.log(
-        'santi3:Sending DTO:',
-        JSON.stringify(createTransactionDto, null, 2),
-      );
-
       const response = await request(app.getHttpServer())
         .post('/transactions')
         .set('Authorization', `Bearer ${validToken}`)
         .send(createTransactionDto);
-
-      console.log('santi4:Backend logs should appear above');
-      console.log('santi5:Response status:', response.status);
-      console.log(
-        'santi6:Response body:',
-        JSON.stringify(response.body, null, 2),
-      );
     });
 
     it('should create deposit transaction', async () => {

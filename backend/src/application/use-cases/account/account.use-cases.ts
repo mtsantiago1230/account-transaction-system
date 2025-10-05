@@ -31,7 +31,6 @@ export class CreateAccountUseCase {
     if (!user) {
       // For development: create test user if it doesn't exist
       if (accountData.userId === '550e8400-e29b-41d4-a716-446655440000') {
-        console.log('Creating test user for development...');
         const testUserEntity = this.userEntityRepository.create({
           id: '550e8400-e29b-41d4-a716-446655440000',
           email: 'test@example.com',
@@ -40,7 +39,6 @@ export class CreateAccountUseCase {
           lastName: 'User',
         });
         const savedUser = await this.userEntityRepository.save(testUserEntity);
-        console.log('Test user created:', savedUser);
         // Now try to find the user again
         user = await this.userRepository.findById(accountData.userId);
       } else {

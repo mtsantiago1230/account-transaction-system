@@ -49,19 +49,6 @@ export class TransactionController {
   async createTransaction(
     @Body() createTransactionDto: CreateTransactionDto,
   ): Promise<TransactionResponseDto> {
-    console.log(
-      '🔍 POST /transactions - Received DTO:',
-      JSON.stringify(createTransactionDto, null, 2),
-    );
-    console.log(
-      '🔍 POST /transactions - fromAccountId value:',
-      createTransactionDto.fromAccountId,
-    );
-    console.log(
-      '🔍 POST /transactions - toAccountId value:',
-      createTransactionDto.toAccountId,
-    );
-
     const transaction =
       await this.createTransactionUseCase.execute(createTransactionDto);
     return this.mapToResponseDto(transaction);

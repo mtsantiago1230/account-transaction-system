@@ -45,12 +45,11 @@ describe('AuthController (e2e)', () => {
       await accountRepository.query('TRUNCATE account CASCADE');
       await userRepository.query('TRUNCATE "user" CASCADE');
     } catch (error) {
-      console.log('Clean up warning (ignorable):', error.message);
+      // Clean up warning (ignorable)
     }
 
     // Crear usuario de prueba
     const hashedPassword = await bcrypt.hash('password123', 10);
-    console.log('🔑 Generated hash:', hashedPassword);
 
     const savedUser = await userRepository.save({
       email: 'auth-test@example.com',
@@ -60,13 +59,11 @@ describe('AuthController (e2e)', () => {
     });
 
     testUserId = savedUser.id;
-    console.log('✅ Test user created with ID:', testUserId);
 
     // Verificar que se guardó correctamente
     const verifyUser = await userRepository.findOne({
       where: { email: 'auth-test@example.com' },
     });
-    console.log('💾 Saved user password hash:', verifyUser?.password);
 
     if (!verifyUser) {
       throw new Error('❌ Usuario no encontrado en la base de datos');
@@ -77,7 +74,6 @@ describe('AuthController (e2e)', () => {
       'password123',
       verifyUser.password,
     );
-    console.log('🔐 bcrypt.compare test result:', testCompare); // DEBE ser true
   });
 
   afterAll(async () => {
@@ -114,9 +110,6 @@ describe('AuthController (e2e)', () => {
         .post('/auth/login')
         .send(loginDto);
       // QUITA el .expect(201) temporalmente
-
-      console.log('Status:', response.status);
-      console.log('Body:', response.body);
 
       // expect(response.status).toBe(201); // Comentado para ver el error
     });
@@ -276,9 +269,6 @@ describe('AuthController (e2e)', () => {
         .post('/auth/login')
         .send(loginDto);
       // .expect(201);
-
-      console.log('Login response1 status:', response1.status);
-      console.log('Login response1 body:', response1.body);
 
       const response2 = await request(app.getHttpServer())
         .post('/auth/login')
