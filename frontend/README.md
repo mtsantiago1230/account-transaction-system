@@ -1,31 +1,27 @@
-# Frontend
+# Account Transaction System — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4.
+Angular 20 application that connects to the NestJS backend for authentication, account management, and transactions.
 
 ## Prerequisites
 
 - Node.js 18+
 - npm
 
-## Quick start
+## Installation
 
-```bash
+```powershell
+cd frontend
 npm install
-ng serve
 ```
 
-Open http://localhost:4200.
+## Environment
 
-Backend is required at http://localhost:3000 (see API configuration below).
-
-## API configuration
-
-The API base URL is configured via Angular environments:
+The API base URL is configured via Angular environment files:
 
 - `src/environments/environment.ts` (development)
 - `src/environments/environment.prod.ts` (production)
 
-Example (already present):
+Default development config:
 
 ```ts
 export const environment = {
@@ -34,78 +30,63 @@ export const environment = {
 };
 ```
 
-Update `apiUrl` if your backend runs at a different address.
+Update `apiUrl` if your backend runs elsewhere.
 
-## Login (test credentials)
+## Running
 
-The backend seed script creates a default test user:
+Development server:
 
-- Email: `test@example.com`
-- Password: `password123`
-
-If login returns 401, ensure you ran the backend seed script and that the frontend points to the correct `apiUrl`.
-
-## Scripts
-
-### Development server
-
-```bash
-ng serve
+```powershell
+npm start
 ```
 
-The app reloads automatically on code changes.
-
-### Code scaffolding
-
-```bash
-ng generate component component-name
-```
-
-List available schematics:
-
-```bash
-ng generate --help
-```
-
-### Building
-
-```bash
-ng build
-```
+The app runs at http://localhost:4200 and reloads on changes.
 
 Production build:
 
-```bash
-ng build --configuration production
+```powershell
+npm run build
+# Serve the files from dist/ with your preferred static server
 ```
 
-Artifacts are generated in `dist/`.
+## Testing
 
-### Running unit tests
+Unit tests:
 
-```bash
+```powershell
 npm test
 ```
 
 Watch mode:
 
-```bash
+```powershell
 npm run test:watch
 ```
 
 Coverage:
 
-```bash
+```powershell
 npm run test:coverage
 ```
 
+## Deployment notes
+
+- Ensure `environment.prod.ts` points to your production API base URL.
+- Build the app with `npm run build` and deploy the generated `dist/` folder to a static host (e.g., Nginx, CDN).
+- For containerized deployments, serve the built files with a lightweight web server (e.g., Nginx) and configure reverse proxy to the backend.
+
+## Architecture
+
+- Angular 20 with standalone components
+- Feature-based structure (`app/core`, `app/features`, `app/shared`)
+- HTTP services consume the NestJS API, using JWT for authenticated calls
+
 ## Troubleshooting
 
-- 401 Unauthorized on login
-  - Backend must be running and reachable at `environment.apiUrl`.
-  - Seed the test user in the backend: see `backend/src/scripts/seed-test-user.ts`.
-  - Confirm the backend returns tokens as `access_token`.
+- 401 Unauthorized
+  - The backend must be running and reachable at `environment.apiUrl`.
+  - Verify the JWT is stored and attached to requests as expected by the backend.
 
-## Additional Resources
+## License
 
-For detailed CLI references, see the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
+UNLICENSED
