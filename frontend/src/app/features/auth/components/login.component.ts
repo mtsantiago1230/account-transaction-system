@@ -146,19 +146,28 @@ export class LoginComponent {
         error: (error) => {
           this.isLoading.set(false);
 
-          // Handle different error types
-          if (error.status === 401) {
-            this.errorMessage.set('Invalid email or password. Please try again.');
-          } else if (error.status === 429) {
+          // Handle authentication errors by checking the error message content
+          const errorMessage = error.message || '';
+
+          if (errorMessage.includes('401') || errorMessage.includes('Unauthorized')) {
+            // Use a clear, user-friendly message for authentication errors
+            this.errorMessage.set(
+              'Invalid email or password. Please check your credentials and try again.'
+            );
+          } else if (errorMessage.includes('429') || errorMessage.includes('Too Many Requests')) {
             this.errorMessage.set('Too many login attempts. Please try again later.');
-          } else if (error.status === 0) {
+          } else if (
+            errorMessage.includes('500') ||
+            errorMessage.includes('Internal Server Error')
+          ) {
+            this.errorMessage.set('Server error. Please try again later.');
+          } else if (error.status === 0 || errorMessage.includes('connection')) {
             this.errorMessage.set(
               'Unable to connect to the server. Please check your internet connection.'
             );
           } else {
-            this.errorMessage.set(
-              error.message || 'An unexpected error occurred. Please try again.'
-            );
+            // For other errors, show a generic message
+            this.errorMessage.set('An unexpected error occurred. Please try again.');
           }
         },
       });
