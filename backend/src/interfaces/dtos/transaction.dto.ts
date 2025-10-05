@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsUUID,
+  ValidateIf,
 } from 'class-validator';
 import {
   TransactionType,
@@ -13,11 +14,11 @@ import {
 
 export class CreateTransactionDto {
   @IsOptional()
-  @IsUUID()
+  @IsUUID(4, { message: 'fromAccountId must be a valid UUID' })
   fromAccountId?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsUUID(4, { message: 'toAccountId must be a valid UUID' })
   toAccountId?: string;
 
   @IsEnum(TransactionType)

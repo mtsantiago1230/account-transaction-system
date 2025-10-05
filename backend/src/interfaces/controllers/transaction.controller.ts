@@ -8,6 +8,7 @@ import {
   Query,
   ParseUUIDPipe,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   CreateTransactionUseCase,
@@ -18,6 +19,7 @@ import {
   GetPendingTransactionsUseCase,
   GetTransactionsByDateRangeUseCase,
   CancelTransactionUseCase,
+  GetAllTransactionsUseCase,
 } from '../../application/use-cases/transaction/transaction.use-cases';
 import {
   CreateTransactionDto,
@@ -39,15 +41,36 @@ export class TransactionController {
     private readonly getPendingTransactionsUseCase: GetPendingTransactionsUseCase,
     private readonly getTransactionsByDateRangeUseCase: GetTransactionsByDateRangeUseCase,
     private readonly cancelTransactionUseCase: CancelTransactionUseCase,
+    private readonly getAllTransactionsUseCase: GetAllTransactionsUseCase,
   ) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createTransaction(
     @Body() createTransactionDto: CreateTransactionDto,
   ): Promise<TransactionResponseDto> {
+    console.log(
+      '🔍 POST /transactions - Received DTO:',
+      JSON.stringify(createTransactionDto, null, 2),
+    );
+    console.log(
+      '🔍 POST /transactions - fromAccountId value:',
+      createTransactionDto.fromAccountId,
+    );
+    console.log(
+      '🔍 POST /transactions - toAccountId value:',
+      createTransactionDto.toAccountId,
+    );
+
     const transaction =
       await this.createTransactionUseCase.execute(createTransactionDto);
     return this.mapToResponseDto(transaction);
+  }
+
+  @Get()
+  async getAllTransactions(): Promise<TransactionResponseDto[]> {
+    const transactions = await this.getAllTransactionsUseCase.execute();
+    return transactions.map(this.mapToResponseDto);
   }
 
   @Put(':id/process')

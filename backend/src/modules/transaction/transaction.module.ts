@@ -12,6 +12,7 @@ import {
   GetPendingTransactionsUseCase,
   GetTransactionsByDateRangeUseCase,
   CancelTransactionUseCase,
+  GetAllTransactionsUseCase,
 } from '../../application/use-cases/transaction/transaction.use-cases';
 import { AccountModule } from '../account/account.module';
 
@@ -32,6 +33,7 @@ import { AccountModule } from '../account/account.module';
     GetPendingTransactionsUseCase,
     GetTransactionsByDateRangeUseCase,
     CancelTransactionUseCase,
+    GetAllTransactionsUseCase,
   ],
   exports: [TransactionRepository, 'ITransactionRepository'],
 })

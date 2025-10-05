@@ -26,59 +26,129 @@ export class CreateTransactionUseCase {
   async execute(
     transactionData: CreateTransactionRequest,
   ): Promise<Transaction> {
-    // Validate accounts exist
-    if (transactionData.fromAccountId) {
-      const fromAccount = await this.accountRepository.findById(
-        transactionData.fromAccountId,
-      );
-      if (!fromAccount) {
-        throw new NotFoundException('Source account not found');
-      }
-      if (!fromAccount.isActive) {
-        throw new BadRequestException('Source account is not active');
-      }
-    }
+    console.log(
+      '🔍 CreateTransactionUseCase - Input data:',
+      JSON.stringify(transactionData, null, 2),
+    );
+    console.log(
+      '🔍 CreateTransactionUseCase - Transaction type:',
+      transactionData.type,
+    );
+    console.log(
+      '🔍 CreateTransactionUseCase - FromAccountId:',
+      transactionData.fromAccountId,
+    );
+    console.log(
+      '🔍 CreateTransactionUseCase - ToAccountId:',
+      transactionData.toAccountId,
+    );
 
-    if (transactionData.toAccountId) {
-      const toAccount = await this.accountRepository.findById(
-        transactionData.toAccountId,
-      );
-      if (!toAccount) {
-        throw new NotFoundException('Destination account not found');
+    try {
+      // Validate transaction type requirements FIRST
+      if (transactionData.type === TransactionType.TRANSFER) {
+        console.log('🔍 Validating TRANSFER transaction');
+        if (!transactionData.fromAccountId || !transactionData.toAccountId) {
+          console.log('❌ Transfer validation failed - missing accounts');
+          throw new BadRequestException(
+            'Transfer requires both source and destination accounts',
+          );
+        }
       }
-      if (!toAccount.isActive) {
-        throw new BadRequestException('Destination account is not active');
-      }
-    }
 
-    // Validate transaction type requirements
-    if (transactionData.type === TransactionType.TRANSFER) {
-      if (!transactionData.fromAccountId || !transactionData.toAccountId) {
-        throw new BadRequestException(
-          'Transfer requires both source and destination accounts',
+      if (transactionData.type === TransactionType.WITHDRAWAL) {
+        console.log('🔍 Validating WITHDRAWAL transaction');
+        if (!transactionData.fromAccountId) {
+          console.log(
+            '❌ Withdrawal validation failed - missing source account',
+          );
+          throw new BadRequestException('Withdrawal requires source account');
+        }
+      }
+
+      if (transactionData.type === TransactionType.DEPOSIT) {
+        console.log('🔍 Validating DEPOSIT transaction');
+        if (!transactionData.toAccountId) {
+          console.log(
+            '❌ Deposit validation failed - missing destination account',
+          );
+          throw new BadRequestException('Deposit requires destination account');
+        }
+      }
+
+      // Validate amount
+      console.log('🔍 Validating amount:', transactionData.amount);
+      if (transactionData.amount <= 0) {
+        console.log('❌ Amount validation failed');
+        throw new BadRequestException('Transaction amount must be positive');
+      }
+
+      // Validate accounts exist and are active
+      if (transactionData.fromAccountId) {
+        console.log(
+          '🔍 Looking up source account:',
+          transactionData.fromAccountId,
         );
+        const fromAccount = await this.accountRepository.findById(
+          transactionData.fromAccountId,
+        );
+        console.log('🔍 Source account found:', fromAccount ? 'YES' : 'NO');
+        if (!fromAccount) {
+          console.log('❌ Source account not found');
+          throw new NotFoundException('Source account not found');
+        }
+        console.log('🔍 Source account active:', fromAccount.isActive);
+        if (!fromAccount.isActive) {
+          console.log('❌ Source account not active');
+          throw new BadRequestException('Source account is not active');
+        }
+
+        // CRITICAL: Check if withdrawal amount exceeds account balance
+        if (transactionData.type === TransactionType.WITHDRAWAL) {
+          console.log(
+            '🔍 Checking withdrawal balance - Account:',
+            fromAccount.balance,
+            'Amount:',
+            transactionData.amount,
+          );
+          if (transactionData.amount > fromAccount.balance) {
+            console.log('❌ Insufficient balance for withdrawal');
+            throw new BadRequestException(
+              'Insufficient balance for withdrawal',
+            );
+          }
+        }
       }
-    }
 
-    if (transactionData.type === TransactionType.WITHDRAWAL) {
-      if (!transactionData.fromAccountId) {
-        throw new BadRequestException('Withdrawal requires source account');
+      if (transactionData.toAccountId) {
+        console.log(
+          '🔍 Looking up destination account:',
+          transactionData.toAccountId,
+        );
+        const toAccount = await this.accountRepository.findById(
+          transactionData.toAccountId,
+        );
+        console.log('🔍 Destination account found:', toAccount ? 'YES' : 'NO');
+        if (!toAccount) {
+          console.log('❌ Destination account not found');
+          throw new NotFoundException('Destination account not found');
+        }
+        console.log('🔍 Destination account active:', toAccount.isActive);
+        if (!toAccount.isActive) {
+          console.log('❌ Destination account not active');
+          throw new BadRequestException('Destination account is not active');
+        }
       }
-    }
 
-    if (transactionData.type === TransactionType.DEPOSIT) {
-      if (!transactionData.toAccountId) {
-        throw new BadRequestException('Deposit requires destination account');
-      }
+      // Create transaction
+      console.log('✅ All validations passed, creating transaction');
+      const result = await this.transactionRepository.create(transactionData);
+      console.log('✅ Transaction created successfully:', result.id);
+      return result;
+    } catch (error) {
+      console.log('❌ CreateTransactionUseCase error:', error.message);
+      console.log('❌ Error type:', error.constructor.name);
+      throw error;
     }
-
-    // Validate amount
-    if (transactionData.amount <= 0) {
-      throw new BadRequestException('Transaction amount must be positive');
-    }
-
-    // Create transaction
-    return this.transactionRepository.create(transactionData);
   }
 }
 
@@ -245,9 +315,17 @@ export class GetTransactionsByAccountUseCase {
   constructor(
     @Inject('ITransactionRepository')
     private readonly transactionRepository: ITransactionRepository,
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository,
   ) {}
 
   async execute(accountId: string): Promise<Transaction[]> {
+    // Validate that the account exists
+    const account = await this.accountRepository.findById(accountId);
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+
     return this.transactionRepository.findByAccountId(accountId);
   }
 }
@@ -321,5 +399,17 @@ export class CancelTransactionUseCase {
     const updatedTransaction =
       await this.transactionRepository.findById(transactionId);
     return updatedTransaction!;
+  }
+}
+
+@Injectable()
+export class GetAllTransactionsUseCase {
+  constructor(
+    @Inject('ITransactionRepository')
+    private readonly transactionRepository: ITransactionRepository,
+  ) {}
+
+  async execute(): Promise<Transaction[]> {
+    return await this.transactionRepository.findAll();
   }
 }
