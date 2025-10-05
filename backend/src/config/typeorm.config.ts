@@ -42,7 +42,11 @@ export default registerAs('typeorm', (): TypeOrmModuleOptions => {
     ],
     synchronize: process.env.NODE_ENV === 'development',
     logging:
-      process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
+      process.env.NODE_ENV === 'development'
+        ? ['query', 'error']
+        : process.env.NODE_ENV === 'test'
+          ? false
+          : ['error'],
     ssl:
       process.env.NODE_ENV === 'production'
         ? { rejectUnauthorized: false }

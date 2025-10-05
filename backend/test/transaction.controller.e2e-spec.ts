@@ -10,6 +10,7 @@ import { AccountEntity } from '../src/infrastructure/database/entities/account.e
 import { TransactionEntity } from '../src/infrastructure/database/entities/transaction.entity';
 import { AccountType } from '../src/domain/entities/account.entity';
 import { ValidationExceptionFilter } from '../src/common/filters/validation-exception.filter';
+import * as bcrypt from 'bcrypt';
 
 describe('TransactionController (e2e)', () => {
   let app: INestApplication;
@@ -58,9 +59,10 @@ describe('TransactionController (e2e)', () => {
     // Create test user with unique email and generate token (no hardcoded ID)
     const uniq = Math.random().toString(36).slice(2, 10).toLowerCase();
     const testEmail = `transaction-test+${uniq}@example.com`;
+    const hashed = await bcrypt.hash('password123', 10);
     const testUser = userRepository.create({
       email: testEmail,
-      password: 'hashedPassword123',
+      password: hashed,
       firstName: 'John',
       lastName: 'Doe',
     });
@@ -105,7 +107,7 @@ describe('TransactionController (e2e)', () => {
         throw new Error('Failed to create test accounts');
       }
     } catch (error) {
-      console.error('❌ Error creating test accounts:', error);
+      // Swallow detailed console output; rethrow for test failure visibility
       throw error;
     }
   });
@@ -117,6 +119,9 @@ describe('TransactionController (e2e)', () => {
     try {
       if (testAccountId) await accountRepository.delete(testAccountId);
       if (testAccount2Id) await accountRepository.delete(testAccount2Id);
+    } catch {}
+    try {
+      if (testUserId) await userRepository.delete(testUserId);
     } catch {}
     try {
       if (testUserId) await userRepository.delete(testUserId);

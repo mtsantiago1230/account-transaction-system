@@ -3,9 +3,10 @@ import {
   IsEnum,
   IsOptional,
   IsNumber,
-  IsPositive,
+  Min,
   IsUUID,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { AccountType } from '../../domain/entities/account.entity';
 
 export class CreateAccountDto {
@@ -22,8 +23,13 @@ export class CreateAccountDto {
   currency: string;
 
   @IsOptional()
+  @Transform(({ value }) =>
+    value === '' || value === null || value === undefined
+      ? undefined
+      : Number(value),
+  )
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   initialBalance?: number;
 }
 

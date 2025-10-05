@@ -43,7 +43,11 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: false, // Always false for CLI operations
   logging:
-    process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
+    process.env.NODE_ENV === 'development'
+      ? ['query', 'error']
+      : process.env.NODE_ENV === 'test'
+        ? false
+        : ['error'],
   ssl:
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }

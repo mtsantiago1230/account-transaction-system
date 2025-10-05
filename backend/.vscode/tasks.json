@@ -1,0 +1,31 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run backend e2e tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:e2e"
+			],
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "backend e2e tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:e2e"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$jest-stare"
+			],
+			"group": "test"
+		}
+	]
+}

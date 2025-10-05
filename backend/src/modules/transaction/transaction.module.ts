@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionEntity } from '../../infrastructure/database/entities/transaction.entity';
 import { TransactionRepository } from '../../infrastructure/repositories/transaction.repository';
 import { TransactionController } from '../../interfaces/controllers/transaction.controller';
+import { SimpleTransactionsCompatController } from '../../interfaces/controllers/simple-transactions.compat.controller';
 import {
   CreateTransactionUseCase,
   ProcessTransactionUseCase,
@@ -18,7 +19,7 @@ import { AccountModule } from '../account/account.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TransactionEntity]), AccountModule],
-  controllers: [TransactionController],
+  controllers: [TransactionController, SimpleTransactionsCompatController],
   providers: [
     TransactionRepository,
     {

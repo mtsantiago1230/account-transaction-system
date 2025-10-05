@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../src/infrastructure/database/entities/user.entity';
 import { AccountEntity } from '../src/infrastructure/database/entities/account.entity';
+import * as bcrypt from 'bcrypt';
 
 describe('AccountController (e2e)', () => {
   let app: INestApplication;
@@ -43,25 +44,23 @@ describe('AccountController (e2e)', () => {
 
     await app.init();
 
-    // Create test user and generate token
-    testUserId = '550e8400-e29b-41d4-a716-446655440000';
+    // Create an isolated test user (do not collide with seeded user) and generate token
+    const uniq = Math.random().toString(36).slice(2, 10).toLowerCase();
+    const testEmail = `account-test+${uniq}@example.com`;
+    const hashed = await bcrypt.hash('password123', 10);
     const testUser = userRepository.create({
-      id: testUserId,
-      email: 'test@example.com',
-      password: 'hashedPassword123',
+      email: testEmail,
+      password: hashed,
       firstName: 'John',
       lastName: 'Doe',
     });
 
-    try {
-      await userRepository.save(testUser);
-    } catch (error) {
-      // User might already exist, continue
-    }
+    const savedUser = await userRepository.save(testUser);
+    testUserId = savedUser.id;
 
     validToken = jwtService.sign({
       sub: testUserId,
-      email: 'test@example.com',
+      email: testEmail,
     });
   });
 
@@ -88,7 +87,7 @@ describe('AccountController (e2e)', () => {
     }
 
     try {
-      await userRepository.delete(testUserId);
+      if (testUserId) await userRepository.delete(testUserId);
     } catch (error) {
       // Ignore cleanup errors
     }
