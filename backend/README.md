@@ -67,6 +67,9 @@ psql -U postgres -c "CREATE DATABASE account_transaction_db;"
 
 # Run migrations
 npm run migration:run
+
+# Create test user (test@example.com / password123)
+npx ts-node src/scripts/seed-test-user.ts
 ```
 
 Generate a migration (example):
@@ -145,25 +148,7 @@ Note: E2E logs may include benign teardown messages.
 - Use a strong `JWT_SECRET` and set `NODE_ENV=production`.
 - Ensure the database is reachable (often via `DATABASE_URL`).
 - After deploying, run `npm run migration:run` once against the production DB.
-
-Optional Docker compose snippet for PostgreSQL:
-
-```
-services:
-   db:
-      image: postgres:16
-      environment:
-         POSTGRES_USER: postgres
-         POSTGRES_PASSWORD: postgres
-         POSTGRES_DB: account_transaction_db
-      ports:
-         - "5432:5432"
-      volumes:
-         - db-data:/var/lib/postgresql/data
-
-volumes:
-   db-data:
-```
+- Ensure PostgreSQL is properly configured and accessible from your application.
 
 ## License
 
