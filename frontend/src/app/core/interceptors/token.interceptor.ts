@@ -29,7 +29,6 @@ export const tokenInterceptor: HttpInterceptorFn = (
 
       // Handle 403 Forbidden errors
       if (error.status === 403) {
-        console.error('Access forbidden. Insufficient permissions.');
         // Optionally redirect to unauthorized page
         // router.navigate(['/unauthorized']);
       }

@@ -163,13 +163,11 @@ export class CreateAccountComponent implements OnInit {
 
       this.accountService.createAccount(accountData).subscribe({
         next: (response) => {
-          console.log('Account created successfully:', response);
           this.loading = false;
           // Navigate back to accounts list
           this.router.navigate(['/accounts']);
         },
         error: (error) => {
-          console.error('Error creating account:', error);
           this.loading = false;
           // TODO: Add proper error handling/notification
         },

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AccountService } from '../../../core/services/account.service';
@@ -9,19 +9,12 @@ import {
   CardComponent,
   ButtonComponent,
 } from '../../../shared/components';
-import { CurrencyPipe } from '../../../shared/pipes';
+// Using Angular's built-in CurrencyPipe
 
 @Component({
   selector: 'app-accounts-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    LoadingSpinnerComponent,
-    CardComponent,
-    ButtonComponent,
-    CurrencyPipe,
-  ],
+  imports: [CommonModule, RouterModule, LoadingSpinnerComponent, ButtonComponent, CurrencyPipe],
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-6">

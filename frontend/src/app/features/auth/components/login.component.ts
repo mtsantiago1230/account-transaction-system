@@ -13,13 +13,7 @@ import {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ButtonComponent,
-    CardComponent,
-    LoadingSpinnerComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, CardComponent],
   template: `
     <div
       class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
@@ -159,7 +153,6 @@ export class LoginComponent {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           this.isLoading.set(false);
-          console.log('Login successful:', response);
 
           // Redirect to accounts page
           this.router.navigate(['/accounts']);
@@ -181,8 +174,6 @@ export class LoginComponent {
               error.message || 'An unexpected error occurred. Please try again.'
             );
           }
-
-          console.error('Login error:', error);
         },
       });
     }

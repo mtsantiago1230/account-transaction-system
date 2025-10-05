@@ -242,11 +242,8 @@ export class TransactionFormComponent implements OnInit {
         description: formValue.description || undefined,
       };
 
-      console.log('Creating transaction:', transactionData);
-
       this.simpleTransactionService.createTransaction(transactionData).subscribe({
         next: (result) => {
-          console.log('Transaction created successfully:', result);
           this.successMessage = `Transaction created successfully! New balance: ${result.newBalance.toFixed(
             2
           )} ${this.account?.currency || 'USD'}`;
@@ -260,8 +257,6 @@ export class TransactionFormComponent implements OnInit {
           }, 2000);
         },
         error: (error) => {
-          console.error('Error creating transaction:', error);
-
           // Extract the specific error message from the backend
           let errorMessage = 'Failed to create transaction. Please try again.';
 

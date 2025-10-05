@@ -12,7 +12,6 @@ import {
   CardComponent,
   ButtonComponent,
 } from '../../../shared/components';
-import { CurrencyPipe } from '../../../shared/pipes';
 import { TransactionFormComponent } from '../../transaction/components/transaction-form.component';
 
 @Component({
@@ -24,7 +23,6 @@ import { TransactionFormComponent } from '../../transaction/components/transacti
     LoadingSpinnerComponent,
     CardComponent,
     ButtonComponent,
-    CurrencyPipe,
     TransactionFormComponent,
   ],
   template: `
@@ -242,14 +240,10 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private accountService: AccountService,
     private transactionService: TransactionService
-  ) {
-    console.log('AccountDetailComponent constructor called');
-  }
+  ) {}
 
   ngOnInit(): void {
-    console.log('AccountDetailComponent ngOnInit called');
     this.accountId = this.route.snapshot.paramMap.get('id');
-    console.log('Account ID from route:', this.accountId);
 
     if (this.accountId) {
       this.loadAccountDetails();
@@ -266,19 +260,16 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
   loadAccountDetails(): void {
     if (!this.accountId) return;
 
-    console.log('Loading account details for ID:', this.accountId);
     this.loading = true;
     this.error = null;
 
     const accountSub = this.accountService.getAccountById(this.accountId).subscribe({
       next: (account) => {
-        console.log('Account loaded successfully:', account);
         this.account = account;
         this.loading = false;
         this.loadTransactions();
       },
       error: (error) => {
-        console.error('Error loading account:', error);
         this.error = 'Failed to load account details. Please try again.';
         this.loading = false;
       },
@@ -290,7 +281,6 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
   loadTransactions(): void {
     if (!this.accountId) return;
 
-    console.log('Loading transactions for account ID:', this.accountId);
     this.loadingTransactions = true;
     this.transactionError = null;
 
@@ -298,12 +288,10 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
       .getTransactionsByAccountId(this.accountId)
       .subscribe({
         next: (transactions) => {
-          console.log('Transactions loaded:', transactions);
           this.transactions = transactions;
           this.loadingTransactions = false;
         },
         error: (error) => {
-          console.error('Error loading transactions:', error);
           this.transactionError = 'Failed to load transactions.';
           this.loadingTransactions = false;
         },
@@ -325,8 +313,6 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
   }
 
   onTransactionCreated(result: TransactionResult): void {
-    console.log('Transaction created, refreshing data:', result);
-
     // Update account balance if available
     if (this.account) {
       this.account = {
