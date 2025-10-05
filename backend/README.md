@@ -80,6 +80,19 @@ src/
 - PostgreSQL database
 - npm or yarn
 
+## Quick start
+
+```powershell
+# from backend/
+npm install
+Copy-Item .env.example .env
+# edit .env if needed (DB, JWT)
+npm run migration:run
+# seed default test user (test@example.com / password123)
+node -r ts-node/register -r tsconfig-paths/register src/scripts/seed-test-user.ts
+npm run start:dev
+```
+
 ## Environment Setup
 
 1. Copy the environment template:
@@ -214,6 +227,21 @@ npm run test:watch
 ```bash
 npm run test:e2e
 ```
+
+Note: E2E logs may include teardown foreign‑key warnings and an open‑handle message; they are benign.
+
+## Seeding
+
+To create or update a default test user with a bcrypt‑hashed password:
+
+```powershell
+node -r ts-node/register -r tsconfig-paths/register src/scripts/seed-test-user.ts
+```
+
+Credentials:
+
+- Email: test@example.com
+- Password: password123
 
 ### Test Coverage
 
