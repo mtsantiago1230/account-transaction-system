@@ -55,53 +55,33 @@ describe('TransactionController (e2e)', () => {
 
     await app.init();
 
-    // Create test user and generate token
-    testUserId = '550e8400-e29b-41d4-a716-446655440000';
+    // Create test user with unique email and generate token (no hardcoded ID)
+    const uniq = Math.random().toString(36).slice(2, 10).toLowerCase();
+    const testEmail = `transaction-test+${uniq}@example.com`;
     const testUser = userRepository.create({
-      id: testUserId,
-      email: 'test@example.com',
+      email: testEmail,
       password: 'hashedPassword123',
       firstName: 'John',
       lastName: 'Doe',
     });
 
-    try {
-      await userRepository.save(testUser);
-    } catch (error) {
-      // User might already exist, continue
-    }
+    const savedUser = await userRepository.save(testUser);
+    testUserId = savedUser.id;
 
     validToken = jwtService.sign({
       sub: testUserId,
-      email: 'test@example.com',
+      email: testEmail,
     });
 
-    // Create test accounts
-    const testAccount1 = accountRepository.create({
-      userId: testUserId,
-      holderName: 'John Doe',
-      accountNumber: 'ACC001TEST',
-      accountType: AccountType.SAVINGS,
-      balance: 1000.0,
-      currency: 'USD',
-      isActive: true,
-    });
-
-    const testAccount2 = accountRepository.create({
-      userId: testUserId,
-      holderName: 'John Doe',
-      accountNumber: 'ACC002TEST',
-      accountType: AccountType.SAVINGS,
-      balance: 500.0,
-      currency: 'USD',
-      isActive: true,
-    });
+    // Generate unique account numbers for this run (reuse uniq)
+    const accountNumber1 = `ACC${uniq.toUpperCase()}01`;
+    const accountNumber2 = `ACC${uniq.toUpperCase()}02`;
 
     try {
       const savedAccount1 = await accountRepository.save({
         userId: testUserId,
         holderName: 'John Doe',
-        accountNumber: 'ACC001TEST',
+        accountNumber: accountNumber1,
         accountType: AccountType.SAVINGS,
         balance: 1000.0,
         currency: 'USD',
@@ -111,7 +91,7 @@ describe('TransactionController (e2e)', () => {
       const savedAccount2 = await accountRepository.save({
         userId: testUserId,
         holderName: 'John Doe',
-        accountNumber: 'ACC002TEST',
+        accountNumber: accountNumber2,
         accountType: AccountType.SAVINGS,
         balance: 500.0,
         currency: 'USD',
@@ -121,25 +101,26 @@ describe('TransactionController (e2e)', () => {
       testAccountId = savedAccount1.id;
       testAccount2Id = savedAccount2.id;
 
-      // VERIFICAR que no sean undefined
       if (!testAccountId || !testAccount2Id) {
         throw new Error('Failed to create test accounts');
       }
     } catch (error) {
       console.error('❌ Error creating test accounts:', error);
-      throw error; // No continuar si fallan
+      throw error;
     }
   });
 
   afterAll(async () => {
     try {
       await transactionRepository.delete({});
-      await accountRepository.delete(testAccountId);
-      await accountRepository.delete(testAccount2Id);
-      await userRepository.delete(testUserId);
-    } catch (error) {
-      // Ignore cleanup errors
-    }
+    } catch {}
+    try {
+      if (testAccountId) await accountRepository.delete(testAccountId);
+      if (testAccount2Id) await accountRepository.delete(testAccount2Id);
+    } catch {}
+    try {
+      if (testUserId) await userRepository.delete(testUserId);
+    } catch {}
 
     await app.close();
   });

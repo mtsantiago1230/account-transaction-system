@@ -1,22 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginDto, AuthResponse } from './dto/auth.dto';
+import type { IUserRepository } from '../domain/repositories/user.repository.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
-
-  // Hardcoded user for testing - using a valid UUID format
-  private readonly testUser = {
-    id: '550e8400-e29b-41d4-a716-446655440000', // Valid UUID for testing
-    email: 'test@example.com',
-    password: '123456', // In production, this should be hashed
-  };
+  constructor(
+    private readonly jwtService: JwtService,
+    @Inject('IUserRepository')
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    if (email === this.testUser.email && password === this.testUser.password) {
-      const { password: _, ...result } = this.testUser;
+    const user = await this.userRepository.findByEmail(email);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const { password: _, ...result } = user;
       return result;
     }
     return null;

@@ -40,13 +40,7 @@ describe('AuthController (e2e)', () => {
 
     await app.init();
 
-    // Limpiar base de datos en orden correcto
-    try {
-      await accountRepository.query('TRUNCATE account CASCADE');
-      await userRepository.query('TRUNCATE "user" CASCADE');
-    } catch (error) {
-      // Clean up warning (ignorable)
-    }
+    // No global truncations here to avoid interfering with other suites
 
     // Crear usuario de prueba
     const hashedPassword = await bcrypt.hash('password123', 10);
@@ -126,7 +120,7 @@ describe('AuthController (e2e)', () => {
         .expect(401);
 
       expect(response.body).toHaveProperty('error', 'Invalid credentials');
-      expect(response.body).not.toHaveProperty('accessToken');
+      expect(response.body).not.toHaveProperty('access_token');
     });
 
     it('should return 401 with invalid password', async () => {
@@ -141,7 +135,7 @@ describe('AuthController (e2e)', () => {
         .expect(401);
 
       expect(response.body).toHaveProperty('error', 'Invalid credentials');
-      expect(response.body).not.toHaveProperty('accessToken');
+      expect(response.body).not.toHaveProperty('access_token');
     });
 
     it('should return 400 with missing email', async () => {
@@ -152,7 +146,7 @@ describe('AuthController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(incompleteLoginDto)
-        .expect(401); // Cambiado de 400 a 401
+        .expect(400); // 400 Bad Request for validation error
     });
 
     it('should return 400 with missing password', async () => {
@@ -163,7 +157,7 @@ describe('AuthController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(incompleteLoginDto)
-        .expect(401); // Cambiado de 400 a 401
+        .expect(400); // 400 Bad Request for validation error
     });
 
     it('should return 400 with invalid email format', async () => {
@@ -175,7 +169,7 @@ describe('AuthController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(invalidEmailDto)
-        .expect(401); // Cambiado de 400 a 401
+        .expect(400);
     });
 
     it('should return 400 with empty email', async () => {
@@ -187,7 +181,7 @@ describe('AuthController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(emptyEmailDto)
-        .expect(401); // Cambiado de 400 a 401
+        .expect(400);
     });
 
     it('should return 400 with empty password', async () => {
@@ -199,7 +193,7 @@ describe('AuthController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(emptyPasswordDto)
-        .expect(401); // Cambiado de 400 a 401
+        .expect(400);
     });
 
     it('should handle case insensitive email login', async () => {
@@ -227,9 +221,10 @@ describe('AuthController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(sqlInjectionDto)
-        .expect(401);
+        .expect(400);
 
-      expect(response.body).toHaveProperty('error', 'Invalid credentials');
+      // Expect a validation error structure
+      expect(response.body.statusCode).toBe(400);
     });
 
     it('should rate limit excessive login attempts', async () => {
@@ -270,15 +265,18 @@ describe('AuthController (e2e)', () => {
         .send(loginDto);
       // .expect(201);
 
+      // Ensure different iat by waiting > 1s (JWT iat has second-level precision)
+      await new Promise((res) => setTimeout(res, 1100));
+
       const response2 = await request(app.getHttpServer())
         .post('/auth/login')
         .send(loginDto)
         .expect(201);
 
-      expect(response1.body.accessToken).not.toBe(response2.body.accessToken);
+      expect(response1.body.access_token).not.toBe(response2.body.access_token);
 
       // Guardar token para los siguientes tests
-      validToken = response1.body.accessToken;
+      validToken = response1.body.access_token;
     });
 
     it('should validate token structure and format', async () => {
@@ -291,7 +289,7 @@ describe('AuthController (e2e)', () => {
             password: 'password123',
           })
           .expect(201);
-        validToken = response.body.accessToken;
+        validToken = response.body.access_token;
       }
 
       const tokenParts = validToken.split('.');
@@ -311,7 +309,7 @@ describe('AuthController (e2e)', () => {
             password: 'password123',
           })
           .expect(201);
-        validToken = response.body.accessToken;
+        validToken = response.body.access_token;
       }
 
       const tokenParts = validToken.split('.');
@@ -335,7 +333,7 @@ describe('AuthController (e2e)', () => {
             password: 'password123',
           })
           .expect(201);
-        validToken = response.body.accessToken;
+        validToken = response.body.access_token;
       }
 
       const tokenParts = validToken.split('.');
@@ -366,7 +364,7 @@ describe('AuthController (e2e)', () => {
         })
         .expect(201);
 
-      validToken = loginResponse.body.accessToken;
+      validToken = loginResponse.body.access_token;
       expect(validToken).toBeDefined();
     });
 
