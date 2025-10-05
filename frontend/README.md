@@ -99,14 +99,6 @@ Coverage:
 npm run test:coverage
 ```
 
-### Running end-to-end tests
-
-```bash
-ng e2e
-```
-
-Angular CLI does not include an e2e framework by default—choose one as needed.
-
 ## Troubleshooting
 
 - 401 Unauthorized on login
