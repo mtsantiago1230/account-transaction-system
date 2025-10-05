@@ -68,6 +68,10 @@ describe('AuthController (e2e)', () => {
     });
     console.log('💾 Saved user password hash:', verifyUser?.password);
 
+    if (!verifyUser) {
+      throw new Error('❌ Usuario no encontrado en la base de datos');
+    }
+
     // Probar bcrypt.compare directamente
     const testCompare = await bcrypt.compare(
       'password123',
