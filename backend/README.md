@@ -31,7 +31,14 @@ npm install
 
 ## Environment
 
-Create a `.env` file in `backend/` with either a `DATABASE_URL` or individual DB settings.
+Create a `.env` file in `backend/` with either a `DATABASE_URL` or individual DB settings. You can use the provided `.env.example` file as a template by renaming it to `.env`.
+
+```powershell
+# Copy the example file and customize it
+cp .env.example .env
+```
+
+Example configuration:
 
 ```
 # Option A — URL (recommended for prod)
