@@ -260,3 +260,4 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+backend/src/infrastructure/database/migrations/*
