@@ -1,0 +1,21 @@
+# Development environment overrides
+services:
+  backend:
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:root@ats-database:5432/account_transaction_db
+      - JWT_SECRET=your-secret-key-here-dev
+      - DB_SSL=false
+    command: npm run start:dev # ← AGREGAR ESTO para hot-reload
+    volumes:
+      # Mount source code for hot-reloading
+      - ./backend/src:/usr/src/app/src
+      - ./backend/test:/usr/src/app/test
+
+  db:
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=account_transaction_db
+    ports:
+      - "5432:5432" # Expose port in development for direct access

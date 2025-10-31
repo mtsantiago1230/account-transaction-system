@@ -33,6 +33,8 @@ if (databaseUrl) {
   };
 }
 
+console.log('SOURCE: Database configuration:', dbConfig, databaseUrl);
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
   ...dbConfig,
@@ -48,8 +50,5 @@ export const AppDataSource = new DataSource({
       : process.env.NODE_ENV === 'test'
         ? false
         : ['error'],
-  ssl:
-    process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : false,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });

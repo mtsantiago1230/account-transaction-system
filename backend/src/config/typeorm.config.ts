@@ -30,6 +30,8 @@ export default registerAs('typeorm', (): TypeOrmModuleOptions => {
     };
   }
 
+  console.log('TYPEORM: Database configuration:', dbConfig, databaseUrl);
+
   return {
     type: 'postgres',
     ...dbConfig,
@@ -43,14 +45,15 @@ export default registerAs('typeorm', (): TypeOrmModuleOptions => {
     synchronize: process.env.NODE_ENV === 'development',
     logging:
       process.env.NODE_ENV === 'development'
-        ? ['query', 'error']
+        ? true
         : process.env.NODE_ENV === 'test'
           ? false
           : ['error'],
-    ssl:
-      process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : false,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    // ssl:
+    //   process.env.NODE_ENV === 'production'
+    //     ? { rejectUnauthorized: false }
+    //     : false,
     autoLoadEntities: true,
     retryAttempts: 5,
     retryDelay: 3000,

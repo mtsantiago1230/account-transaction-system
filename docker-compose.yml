@@ -1,0 +1,33 @@
+# Base configuration for all environments
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    container_name: account-transaction-backend
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    container_name: account-transaction-frontend
+    ports:
+      - "${FRONTEND_PORT:-4200}:8080"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  db:
+    image: postgres:13
+    container_name: ats-database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  db_data:

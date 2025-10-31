@@ -5,4 +5,5 @@ export default registerAs('database', () => ({
   type: 'postgres',
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
+  // logging: process.env.NODE_ENV === 'development',
 }));
