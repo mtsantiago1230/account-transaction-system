@@ -30,7 +30,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
  */
 function isApiRequest(req: HttpRequest<any>): boolean {
   // Add your API base URLs here
-  const apiUrls = ['http://localhost:3000', 'https://your-production-api.com'];
+  const apiUrls = ['http://localhost:3000', 'https://radiant-peace-production-7253.up.railway.app'];
 
   return apiUrls.some((url) => req.url.startsWith(url));
 }
