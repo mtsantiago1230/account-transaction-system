@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Account, CreateAccountDto, UpdateAccountDto } from '../models/account.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private readonly apiUrl = 'http://localhost:3000/accounts'; // Temporary hardcoded URL
+  private readonly apiUrl = `${environment.apiUrl}/accounts`;
 
   constructor(private http: HttpClient) {}
 

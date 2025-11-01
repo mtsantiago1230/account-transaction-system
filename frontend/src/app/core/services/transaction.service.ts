@@ -6,12 +6,13 @@ import {
   CreateTransactionDto,
   TransactionDateRangeQuery,
 } from '../models/transaction.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionService {
-  private readonly apiUrl = 'http://localhost:3000/transactions'; // Temporary hardcoded URL
+  private readonly apiUrl = `${environment.apiUrl}/transactions`;
 
   constructor(private http: HttpClient) {}
 
