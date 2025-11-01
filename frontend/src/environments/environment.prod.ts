@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-api-url.com',
+  apiUrl: 'https://radiant-peace-production-dd57.up.railway.app',
 };
