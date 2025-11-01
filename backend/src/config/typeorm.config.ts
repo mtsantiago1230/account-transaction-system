@@ -42,7 +42,9 @@ export default registerAs('typeorm', (): TypeOrmModuleOptions => {
     subscribers: [
       __dirname + '/../infrastructure/database/subscribers/*{.ts,.js}',
     ],
-    synchronize: process.env.TYPEORM_SYNC === 'true' || process.env.NODE_ENV === 'development',
+    synchronize:
+      process.env.TYPEORM_SYNC === 'true' ||
+      process.env.NODE_ENV === 'development',
     logging:
       process.env.NODE_ENV === 'development'
         ? true
